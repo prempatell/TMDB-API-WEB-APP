@@ -54,3 +54,7 @@ jobs:
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_75a3968b3f764dee98a321b52323f3e2 }}
         package: .
+        
+    - name: Setup PHP Action
+      uses: shivammathur/setup-php@2.10.0
+
