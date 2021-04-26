@@ -1,0 +1,268 @@
+*{
+    margin:0;
+    padding:0;
+  }
+  html{
+    background-color: #0093E9;
+    background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+    background-repeat: no-repeat;
+    min-height:100%;
+    width:100%;
+  }
+  h1 {
+    font-size: 4vw;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#404447;
+    
+   
+    text-decoration: none;
+    text-shadow: 2px 2px 2px rgba(150, 150, 150, 1);
+  }
+  h2{
+    text-align: center;
+    font-size:2em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#404447;
+    padding-top:.5em;
+    padding-bottom:.5em;
+    text-decoration: none;
+    text-shadow: 2px 2px 2px rgba(150, 150, 150, 1);
+  }
+ a{
+    text-decoration: none;
+  }
+  p{
+    text-align: center;
+    font-size:1.5em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#404447;
+  }
+  
+   input{
+    max-height: 2.5em;
+    max-width: 35em;
+    padding: 1em;
+    border: none;
+    border-radius: 1vw;
+    text-decoration: none;
+    font-size:1em;
+    outline:none;
+    text-align:center ;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.609);
+  }
+  button{
+   
+    min-width:6em;
+    margin-top: 1.5em;
+    margin-bottom:1.5em;
+    margin-left:1em;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 1em;
+    padding: 1em;
+    border: none;
+    text-align: center;
+    font-size:1em;
+    text-decoration: none;
+    outline:none;
+    background-color: rgba(255, 255, 255, 0.486);  
+    transition:all .25s;
+  }
+  button:hover{
+    background-color: rgba(211, 206, 206, 0.582);
+  }
+  
+  
+  form{
+    display: inline-block;
+    border-radius: 8px;
+    text-decoration: none;
+    outline:none;
+     
+  }
+  table{
+    width:100%;
+    border:none;
+    margin-left: auto;
+    margin-right:auto;
+  }
+  td{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#404447;
+    font-size: 1.5em;
+    text-align: center;
+  }
+  th{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#404447;
+    font-size: 2em;
+    text-align: center;
+  }
+  #container{
+    min-height: 100%;
+    min-width:100%;
+    margin-bottom: 4vh;
+    position: relative;
+  }
+  .glass{
+    z-index:0;
+    max-width: 45vw;
+    position:static;
+    padding:2em;
+    margin-top:8vw;
+    margin-left:auto;
+    margin-right:auto;
+    border-radius: 10px;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+    background-color: rgba(255, 255, 255, .30);  
+    backdrop-filter: blur(10px);
+  }
+  #searchResults{
+    display:flex;
+    flex-direction:column;
+    flex-wrap:wrap;
+  }
+  #baileyResults{
+    display:flex;
+    flex-direction:column;
+    flex-wrap:wrap; 
+  }
+
+  #book{
+     
+    max-width:35%;
+    max-height: 22em;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:3vh;
+    margin-bottom:1vh;
+    overflow:hidden;
+    padding-right: 3vw;
+    padding-left: 3vw;
+    padding-top:2vh;
+    padding-bottom:1vh;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+    background-color: rgba(255, 255, 255, .30);  
+    backdrop-filter: blur(10px);
+    border:none;
+    outline:none;
+    transition:all .2s ease-in-out;
+  }
+  #bailey_bk{
+    max-width:35%;
+    max-height: 22em;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:3vh;
+    margin-bottom:1vh;
+    overflow:hidden;
+    padding-right: 3vw;
+    padding-left: 3vw;
+    padding-top:2vh;
+    padding-bottom:1vh;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+    background-color: rgba(255, 255, 255, .30);  
+    backdrop-filter: blur(10px);
+    border:none;
+    outline:none;
+    transition:all .2s ease-in-out;
+  }
+#bookcover{
+  min-height:25em;
+}
+#bkcover{
+  min-height:25em;
+}
+#book:focus{
+  max-height:200vw;
+  max-width:80vw;
+}
+#bailey_bk:focus{
+  max-height:200vw;
+  max-width:80vw;
+  }
+  
+
+  nav{
+    top:0;
+    position:fixed;
+    width:100%;
+    z-index:10;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding:.5vw;
+    margin:0;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+    background-color: rgba(255, 255, 255, .30);  
+    backdrop-filter: blur(10px);
+    transition:all .5ms;
+  }
+  nav p{
+    font-weight:bold;
+    font-size: 2.25em;
+  }
+  nav p:hover{
+    color:gray;
+    cursor:pointer;
+  } 
+  #search{
+    display:none;
+  }
+  #myShelf{
+    display:none;
+  }
+  #BookShelf{
+    display:none;
+  }
+  #searchNav{
+    display:none;
+  }
+  #searchNavContain{
+    display:flex;
+    margin-left: auto;
+    margin-right:auto;
+    width:40%;
+    justify-content: center;
+  }
+
+  .searchbox{
+    text-align:center;
+  }
+  .container {
+    height: 3vh;
+    position: relative;
+  }
+  
+  .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+  #displayOption{
+    max-width: 20vw;
+    position:static;
+    padding:.5em;
+    margin-top:1vw;
+    margin-left:auto;
+    margin-right:auto;
+    border-radius: 10px;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+    background-color: rgba(255, 255, 255, .30);  
+    backdrop-filter: blur(10px);
+  }
+  #displayOption table{
+    margin:auto;
+    
+  }
+  #displayOption tr{
+    text-align: center;
+  }
+  #displayOption td{
+    width:5em;
+  }
