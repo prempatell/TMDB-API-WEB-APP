@@ -246,6 +246,8 @@ $clearWatchListSearch = function(){
     console.log("WatchList's page removed");
  });
 };
+/*API key: 4b1b68988784917b4b649f5723b60b02*/
+/*https://api.themoviedb.org/*/
 $searchMovie = function(){
   $.get("https://www.googleapis.com/books/v1/volumes?q="+searchtext+"&startIndex="+startIndex, function(searchResponse){
     console.log(searchResponse);
@@ -267,7 +269,7 @@ $searchMovie = function(){
 
 
 $FavoritesSearch=function(){
-    $.get("https://www.googleapis.com/books/v1/users/100449795462524380304/bookshelves/1001/volumes?startIndex="+startIndex1, function(searchResponse){
+    $.get("https://api.themoviedb.org/4/account/%7Baccount_id%7D/movie/favorites?page=1", function(searchResponse){
    console.log(searchResponse);
    console.log("search from:" + startIndex1);
    totalResults=searchResponse.totalItems;
