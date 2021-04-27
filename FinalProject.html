@@ -11,59 +11,47 @@ integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
 crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
 
+<script id="PopularContentTemp" type="text/template">
+  {{#results}}
+  <div id="HomeMovie" tabindex='0'>
+  <div id="HomeMovieCover">
+  <h2>{{title}} {{name}}</h2>
+  <br>
+  <p><img src="{{backdrop_path}}" alt="{{title}}"></p>
+  </div>
 
+  <p>{{overview}}</p>
+  <p>{{genre}}</p>
+</div>
+{{/results}}
+</script>
 <script id="SearchTemp" type="text/template">
-  {{#items}}
+  {{#results}}
   <div id="SearchMovie" tabindex='0'>
   <div id="SearchMovieCover">
-  <h2>{{ volumeInfo.title }}</h2>
+  <h2>{{title}}</h2>
   <br>
-  <p><img src="{{volumeInfo.imageLinks.thumbnail}}" alt="{{volumeInfo.title}}"></p>
+  <p><img src="{{poster_path}}" alt="{{title}}"></p>
   </div>
-  <table>
-    <tr>
-      <th>Authors</th>
-      <th>Catagories</th>
-      <th>Publisher</th>
-    </tr>
-    <tr>
-      <td> {{volumeInfo.authors}} </td>
-      <td> {{volumeInfo.categories}} </td>
-      <td> {{volumeInfo.publisher}} </td>
-    </tr>
-  </table>
-  <h2>Description</h2>
-  <p> {{volumeInfo.description}} </p>
-  <br>
-  </div>
+
+  <p>{{overview}}</p>
+  <p>{{genre}}</p>
 </div>
-{{/items}}
+{{/results}}
 </script>
 <script id="FavoritesTemp" type="text/template">
-  {{#items}}
+  {{#results}}
   <div id="FavoritesMovie" tabindex='0'>
   <div id="FavoritesMovieCover">
-  <h2>{{ volumeInfo.title }}</h2>
+  <h2>{{title}}</h2>
   <br>
-  <p><img src="{{volumeInfo.imageLinks.thumbnail}}" alt="{{volumeInfo.title}}"></p>
+  <p><img src="{{poster_path}}" alt="{{title}}"></p>
   </div>
-  <table>
-    <tr>
-      <th>Authors</th>
-      <th>Catagories</th>
-      <th>Publisher</th>
-    </tr>
-    <tr>
-      <td> {{volumeInfo.authors}} </td>
-      <td> {{volumeInfo.categories}} </td>
-      <td> {{volumeInfo.publisher}} </td>
-    </tr>
-  </table>
-  <h2>Description</h2>
-  <p> {{ volumeInfo.description }} </p>
-  <br>
-  </div>
+
+  <p>{{overview}}</p>
+  <p>{{genre}}</p>
 </div>
+{{/results}}
 {{/items}}
 </script>
 <script type="text/javascript">
@@ -76,11 +64,13 @@ var bool=0;
 var totalResults=0;
 var searchtext;  
 
+
 /*page actions*/
 $(document).ready(function(){
   $FavoritesSearch();
   $searchButtonColor();
   $FavoritesNavButtonColor();
+  $PopularContent();
 
 $('input:radio[name="SearchDisplayOption"]').change(
   function(){
@@ -150,7 +140,7 @@ $('.WatchListToggle').click(function(){
 $("#SearchButton").click(function(){
       console.log("search submitted");
       searchtext = $('#textbox').val();
-    
+     
       if(searchtext == ''){
         alert("Please enter something to search");
     }
@@ -161,6 +151,7 @@ $("#SearchButton").click(function(){
       }
     startIndex=0;
     searchButton=1;
+    $clearHome();
     $searchMovie();
     $searchButtonColor();
     }
@@ -225,15 +216,20 @@ $clearpage = function(){
     $('#Menu').hide();
     $('#search').hide();
 
-};
+}
 
 $clearSearch = function(){
     $("div[id*='SearchMovie']").each(function (x, pj) {
     $(pj).remove();
     console.log("book removed");
  });
-};
-
+}
+$clearHome = function(){
+    $("div[id*='HomeMovie']").each(function (x, pj) {
+    $(pj).remove();
+    console.log("home removed");
+ });
+}
 $clearFavoritesSearch = function(){
     $("div[id*='FavoritesMovie']").each(function (x, pj) {
     $(pj).remove();
@@ -245,8 +241,10 @@ $clearWatchListSearch = function(){
     $(pj).remove();
     console.log("WatchList's page removed");
  });
-};
+}
 /*API key: 4b1b68988784917b4b649f5723b60b02*/
+/*API Read acess Token (v4 auth)*/
+/*eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YjFiNjg5ODg3ODQ5MTdiNGI2NDlmNTcyM2I2MGIwMiIsInN1YiI6IjYwODgyMDExODQ0NDhlMDA3OTMyMmNmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6OfaTVdNW_bl1UnDPDklp2zz0hION_VRzjdPc54nJ54*/
 /*https://api.themoviedb.org/*/
 $searchMovie = function(){
   $.get("https://www.googleapis.com/books/v1/volumes?q="+searchtext+"&startIndex="+startIndex, function(searchResponse){
@@ -266,10 +264,47 @@ $searchMovie = function(){
 
   });
 }
+$PopularContent=function(){
+  $.get("https://api.themoviedb.org/3/trending/all/day?api_key=4b1b68988784917b4b649f5723b60b02", function(searchResponse){
+   console.log(searchResponse);
+   console.log("search from:" + startIndex1);
+   totalResults=searchResponse.totalItems;
+   console.log("total results:"+totalResults);
 
+   var template = $('#PopularContentTemp').html();
+   var text = Mustache.render(template, searchResponse);
+   $("#HomeResults").html(text);
+   console.log("home made");
+  });
+}
 
 $FavoritesSearch=function(){
-    $.get("https://api.themoviedb.org/4/account/%7Baccount_id%7D/movie/favorites?page=1", function(searchResponse){
+  var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "https://api.themoviedb.org/4/account/tt0091042/tv/favorites?page=1",
+  "method": "GET",
+  "headers": {
+    "authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YjFiNjg5ODg3ODQ5MTdiNGI2NDlmNTcyM2I2MGIwMiIsInN1YiI6IjYwODgyMDExODQ0NDhlMDA3OTMyMmNmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6OfaTVdNW_bl1UnDPDklp2zz0hION_VRzjdPc54nJ54"
+  },
+  "data": "{}"
+}
+
+$.get(settings, function(searchResponse){
+  
+   console.log(searchResponse);
+   console.log("search from:" + startIndex1);
+   totalResults=searchResponse.totalItems;
+   console.log("total results:"+totalResults)
+   var template = $('#FavoritesTemp').html();
+   var text = Mustache.render(template, searchResponse);
+   $("#FavoritesResults").html(text);
+   console.log("book made");
+  });
+};
+
+$WatchListSearch=function(){
+    $.get("https://www.googleapis.com/books/v1/volumes?q=", function(searchResponse){
    console.log(searchResponse);
    console.log("search from:" + startIndex1);
    totalResults=searchResponse.totalItems;
