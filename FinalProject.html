@@ -17,7 +17,7 @@ crossorigin="anonymous"></script>
   <div id="HomeMovieCover">
   <h2>{{title}} {{name}}</h2>
   <br>
-  <p><img src="{{backdrop_path}}" alt="{{title}}"></p>
+  <p><img src="https://image.tmdb.org/t/p/w200/{{poster_path}}" alt="{{title}}"></p>
   </div>
 
   <p>{{overview}}</p>
@@ -31,7 +31,7 @@ crossorigin="anonymous"></script>
   <div id="SearchMovieCover">
   <h2>{{title}}</h2>
   <br>
-  <p><img src="{{poster_path}}" alt="{{title}}"></p>
+  <p><img src="https://image.tmdb.org/t/p/w200/{{poster_path}}" alt="{{title}}"></p>
   </div>
 
   <p>{{overview}}</p>
@@ -45,14 +45,27 @@ crossorigin="anonymous"></script>
   <div id="FavoritesMovieCover">
   <h2>{{title}}</h2>
   <br>
-  <p><img src="{{poster_path}}" alt="{{title}}"></p>
+  <p><img src="https://image.tmdb.org/t/p/w200/{{poster_path}}" alt="{{title}}"></p>
   </div>
 
   <p>{{overview}}</p>
   <p>{{genre}}</p>
 </div>
 {{/results}}
-{{/items}}
+</script>
+<script id="WatchListTemp" type="text/template">
+  {{#results}}
+  <div id="WatchListMovie" tabindex='0'>
+  <div id="WatchListMovieCover">
+  <h2>{{title}}</h2>
+  <br>
+  <p><img src="https://image.tmdb.org/t/p/w200/{{poster_path}}" alt="{{title}}"></p>
+  </div>
+
+  <p>{{overview}}</p>
+  <p>{{genre}}</p>
+</div>
+{{/results}}
 </script>
 <script type="text/javascript">
 /*variables*/
@@ -63,6 +76,7 @@ var FavoritesNavButtonBool=1;
 var bool=0;
 var totalResults=0;
 var searchtext;  
+var request_token;
 
 
 /*page actions*/
@@ -71,6 +85,8 @@ $(document).ready(function(){
   $searchButtonColor();
   $FavoritesNavButtonColor();
   $PopularContent();
+  $Authentication();
+  
 
 $('input:radio[name="SearchDisplayOption"]').change(
   function(){
@@ -246,8 +262,15 @@ $clearWatchListSearch = function(){
 /*API Read acess Token (v4 auth)*/
 /*eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YjFiNjg5ODg3ODQ5MTdiNGI2NDlmNTcyM2I2MGIwMiIsInN1YiI6IjYwODgyMDExODQ0NDhlMDA3OTMyMmNmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6OfaTVdNW_bl1UnDPDklp2zz0hION_VRzjdPc54nJ54*/
 /*https://api.themoviedb.org/*/
+$Authentication=function(){
+  $.get("https://api.themoviedb.org/3/authentication/token/new?api_key=4b1b68988784917b4b649f5723b60b02", function(searchResponse){
+   console.log("Authenticated");
+   request_token = searchResponse.request_token;
+  });
+}
+
 $searchMovie = function(){
-  $.get("https://www.googleapis.com/books/v1/volumes?q="+searchtext+"&startIndex="+startIndex, function(searchResponse){
+  $.get( "https://api.themoviedb.org/3/search/movie?api_key=4b1b68988784917b4b649f5723b60b02&query="+searchtext, function(searchResponse){
     console.log(searchResponse);
     console.log("search from:" + startIndex);
     var searchdata, cover;
@@ -282,7 +305,7 @@ $FavoritesSearch=function(){
   var settings = {
   "async": true,
   "crossDomain": true,
-  "url": "https://api.themoviedb.org/4/account/tt0091042/tv/favorites?page=1",
+  "url": "https://api.themoviedb.org/4/account/tt0091042/lists?page=1",
   "method": "GET",
   "headers": {
     "authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YjFiNjg5ODg3ODQ5MTdiNGI2NDlmNTcyM2I2MGIwMiIsInN1YiI6IjYwODgyMDExODQ0NDhlMDA3OTMyMmNmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6OfaTVdNW_bl1UnDPDklp2zz0hION_VRzjdPc54nJ54"
@@ -290,8 +313,10 @@ $FavoritesSearch=function(){
   "data": "{}"
 }
 
-$.get(settings, function(searchResponse){
-  
+$.ajax(settings).done(function (searchResponse) {
+  console.log(response);
+
+  console.log("favorites made");
    console.log(searchResponse);
    console.log("search from:" + startIndex1);
    totalResults=searchResponse.totalItems;
@@ -299,7 +324,7 @@ $.get(settings, function(searchResponse){
    var template = $('#FavoritesTemp').html();
    var text = Mustache.render(template, searchResponse);
    $("#FavoritesResults").html(text);
-   console.log("book made");
+   console.log("favorites made");
   });
 };
 
@@ -470,3 +495,4 @@ $FavoritesNavButtonColor = function(){
 </div>
 </div>
 </html>
+
