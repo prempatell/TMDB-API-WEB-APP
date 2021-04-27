@@ -11,10 +11,11 @@ integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
 crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
 
-<script id="temp" type="text/template">
+
+<script id="SearchTemp" type="text/template">
   {{#items}}
-  <div id="book" tabindex='0'>
-  <div id="bookcover">
+  <div id="SearchMovie" tabindex='0'>
+  <div id="SearchMovieCover">
   <h2>{{ volumeInfo.title }}</h2>
   <br>
   <p><img src="{{volumeInfo.imageLinks.thumbnail}}" alt="{{volumeInfo.title}}"></p>
@@ -38,10 +39,10 @@ crossorigin="anonymous"></script>
 </div>
 {{/items}}
 </script>
-<script id="temp2" type="text/template">
+<script id="FavoritesTemp" type="text/template">
   {{#items}}
-  <div id="bailey_bk" tabindex='0'>
-  <div id="bkcover">
+  <div id="FavoritesMovie" tabindex='0'>
+  <div id="FavoritesMovieCover">
   <h2>{{ volumeInfo.title }}</h2>
   <br>
   <p><img src="{{volumeInfo.imageLinks.thumbnail}}" alt="{{volumeInfo.title}}"></p>
@@ -66,21 +67,22 @@ crossorigin="anonymous"></script>
 {{/items}}
 </script>
 <script type="text/javascript">
+/*variables*/
 var startIndex=0;
 var startIndex1=0;
 var searchButton=1;
-var baileyNavButton=1;
+var FavoritesNavButtonBool=1;
 var bool=0;
 var totalResults=0;
 var searchtext;  
 
-
+/*page actions*/
 $(document).ready(function(){
   $FavoritesSearch();
   $searchButtonColor();
   $FavoritesNavButtonColor();
 
-$('input:radio[name="view"]').change(
+$('input:radio[name="SearchDisplayOption"]').change(
   function(){
     if ($('#list_option_one').is(':checked') && $('#list_option_one').val() == 'l') {
       $('#searchResults').css('flex-direction','column');
@@ -91,18 +93,29 @@ $('input:radio[name="view"]').change(
       console.log("search row");
     }
   });
-$('input:radio[name="view1"]').change(
+$('input:radio[name="FavoritesDisplayOption"]').change(
   function(){
     if ($('#list_option_two').is(':checked') && $('#list_option_two').val() == 'l') {
-      $('#FavoritesOption').css('flex-direction','column');
-      console.log("bailey's shelf column");
+      $('#FavoritesResults').css('flex-direction','column');
+      console.log("Favorites's shelf column");
     }
     else{
-      $('#FavoritesOption').css('flex-direction','row');
-      console.log("bailey's shelf row");
+      $('#FavoritesResults').css('flex-direction','row');
+      console.log("Favorites's shelf row");
     }
   });
-
+  $('input:radio[name="WatchListDisplayOption"]').change(
+  function(){
+    if ($('#list_option_two').is(':checked') && $('#list_option_two').val() == 'l') {
+      $('#WatchListResults').css('flex-direction','column');
+      console.log("Favorites's shelf column");
+    }
+    else{
+      $('#WatchListResults').css('flex-direction','row');
+      console.log("Favorites's shelf row");
+    }
+  });
+/*toggle actions*/
 $("#HomeOption").click(function(){
     $clearpage();
     $('#Home').show();
@@ -114,15 +127,23 @@ $("#MenuOption").click(function(){
     $('#Menu').show();
 });
 
-$('#FavoritesOption').click(function(){
-    $clearMenu();
-    $('#FavoritesTab').show();
+$('.FavoritesToggle').click(function(){
+    $('#MenuNameWatchList').hide();
+    $('#MenuNameFavorites').show();
+    $('#WatchListResults').hide();
+    $('#FavoritesResults').show();
+    $('WatchListNav').hide();
+    $('FavoritesNav').show();
     console.log("show favorites")
 });
 
-$('WatchListOption').click(function(){
-    $clearMenu();
-    $('#WatchListTab').show();
+$('.WatchListToggle').click(function(){
+    $('#MenuNameWatchList').show();
+    $('#MenuNameFavorites').hide();
+    $('#WatchListResults').show();
+    $('#FavoritesResults').hide();
+    $('WatchListNav').show();
+    $('FavoritesNav').hide();
     console.log("Show watch List")
 });
 
@@ -140,33 +161,34 @@ $("#SearchButton").click(function(){
       }
     startIndex=0;
     searchButton=1;
-    $searchbook();
+    $searchMovie();
     $searchButtonColor();
     }
 });
+/*Nav buttons*/
 $('#searchNavButton1', ).click(function(){
-  $clearbooksearch();
+  $clearSearch();
   startIndex=0; 
   searchButton=1;
-  $searchbook();
+  $searchMovie();
   $searchButtonColor();
 });
 $('#searchNavButton2', ).click(function(){
-  $clearbooksearch();
+  $clearSearch();
   startIndex=10; 
   searchButton=2;
-  $searchbook();
+  $searchMovie();
   $searchButtonColor();
 });
 $('#searchNavButton3', ).click(function(){
-  $clearbooksearch();
+  $clearSearch();
   startIndex=20; 
   searchButton=3;
-  $searchbook();
+  $searchMovie();
   $searchButtonColor();
 });
 $('#searchNavButton4', ).click(function(){
-  $clearbooksearch();
+  $clearSearch();
   startIndex=30; 
   searchButton=4;
   $searchbook();
@@ -179,57 +201,52 @@ $('#searchNavButton5', ).click(function(){
   $searchbook();
   $searchButtonColor();
 });
-$('#baileyNavButton1', ).click(function(){
-  $clearBaileySearch();
+$('#FavoritesNavButton1', ).click(function(){
+  $clearFavoritesSearch();
   startIndex1=0; 
-  baileyNavButton=1;
-  $baileyShelf();
-  $baileyNavButtonColor();
+  FavoritesNavButtonBool=1;
+  $FavoritesSearch();
+  $FavoritesNavButtonColor();
 });
-$('#baileyNavButton2', ).click(function(){
-  $clearBaileySearch();
+$('#FavoritesNavButton2', ).click(function(){
+  $clearFavoritesSearch();
   startIndex1=10; 
-  baileyNavButton=2;
-  $baileyShelf();
-  $baileyNavButtonColor();
+  FavoritesNavButtonBool=2;
+  $FavoritesSearch();
+  $FavoritesNavButtonColor(); 
 });
 
 });
-$clearMenu = function(){
-  $('#welcome').hide();
-  $('#Home').hide();
-  $('#FavoritesTab').hide();
-  $('#WatchListTab').hide();
-  $('#FavoritesResults').hide();
-  $('#WatchListResults').hide();
-  $('#search').hide();
-};
+
+/*Functions*/
 $clearpage = function(){
     $('#welcome').hide();
     $('#Home').hide();
     $('#Menu').hide();
-    $('#FavoritesTab').hide();
-    $('#WatchListTab').hide();
-    $('#FavoritesResults').hide();
-    $('#WatchListResults').hide();
     $('#search').hide();
 
 };
 
-$clearbooksearch = function(){
-    $("div[id*='book']").each(function (x, pj) {
+$clearSearch = function(){
+    $("div[id*='SearchMovie']").each(function (x, pj) {
     $(pj).remove();
     console.log("book removed");
  });
 };
 
-$clearBaileySearch = function(){
-    $("div[id*='bailey_bk']").each(function (x, pj) {
+$clearFavoritesSearch = function(){
+    $("div[id*='FavoritesMovie']").each(function (x, pj) {
     $(pj).remove();
-    console.log("Bailey's book removed");
+    console.log("Favorites's page cleared");
+ });
+}
+$clearWatchListSearch = function(){
+    $("div[id*='WatchListMovie']").each(function (x, pj) {
+    $(pj).remove();
+    console.log("WatchList's page removed");
  });
 };
-$searchbook = function(){
+$searchMovie = function(){
   $.get("https://www.googleapis.com/books/v1/volumes?q="+searchtext+"&startIndex="+startIndex, function(searchResponse){
     console.log(searchResponse);
     console.log("search from:" + startIndex);
@@ -238,7 +255,7 @@ $searchbook = function(){
     
     bool++; 
    
-    var template = $('#temp').html();
+    var template = $('#SearchTemp').html();
     var text = Mustache.render(template, searchResponse);
     $("#searchResults").html(text);
     console.log("book made");
@@ -255,13 +272,11 @@ $FavoritesSearch=function(){
    console.log("search from:" + startIndex1);
    totalResults=searchResponse.totalItems;
    console.log("total results:"+totalResults)
-   var baileysdata, cover, id;
-   var p=1;
-   var tab=0;
+   
   
-   var template = $('#temp2').html();
+   var template = $('#FavoritesTemp').html();
    var text = Mustache.render(template, searchResponse);
-   $("#baileyResults").html(text);
+   $("#FavoritesResults").html(text);
    console.log("book made");
   });
 };
@@ -294,14 +309,16 @@ $searchButtonWhite = function(){
   $("#searchNavButton5").css("background-color","rgba(255, 255, 255, .7)");
 };
 $FavoritesNavButtonColor = function(){
-  switch(baileyNavButton){
+  switch(FavoritesNavButtonBool){
     case 1:
       $("#FavoritesNavButton2").css("background-color","rgba(255, 255, 255, .7)");
       $("#FavoritesNavButton1").css("background-color","rgba(211, 206, 206, 0.582)");
+      console.log("Favorite button color 1");
     break;
     case 2:
       $("#FavoritesNavButton1").css("background-color","rgba(255, 255, 255, .7)");
       $("#FavoritesNavButton2").css("background-color","rgba(211, 206, 206, 0.582)");
+      console.log("Favorite button color 2");
     break;
   }
 }
@@ -330,14 +347,13 @@ $FavoritesNavButtonColor = function(){
 </div>
 <div id="Home">
   <div class="glass">
-  <h1>Home</h1>
-
     <div class="searchbox">
-        
+      <h1>Home</h1>
         <input id="textbox" type="search" >
         <button id="SearchButton">  Search Books  </button>
-      
+      <p>Our Popular Movies at the moment</p>
     </div>
+    
   </div>
 
   <div id="displayOption">
@@ -345,12 +361,12 @@ $FavoritesNavButtonColor = function(){
     <table>
       <tr>
        <td> 
-         <input type="radio" id="list_option_one" name="view" value="l" checked="checked">
+         <input type="radio" id="list_option_one" name="SearchDisplayOption" value="l" checked="checked">
          <br>
         <label for="list_option_one">List</label>
       </td>
       <td>
-        <input type="radio" id="grid_option_one" name="view" value="g">
+        <input type="radio" id="grid_option_one" name="SearchDisplayOption" value="g">
         <br>
         <label for="grid_option_one">Grid</label>
       </td>
@@ -374,61 +390,44 @@ $FavoritesNavButtonColor = function(){
     <br>
   </div>
 <div id="Menu">
-  <div id="MenuToggle">
-    <p id="FavoritesOption">Favorites</p>
-    <p>|</p>
-    <p id="WatchListOption">Watch List</p>
-  </div>
-</div>
-<div id="FavoritesTab">
   <div class="glass">
-    <h1>Favorites</h1>
+    <p><span class="FavoritesToggle">Favorites</span> | <span class="WatchListToggle">Watch List</span></p>
+    <h1 id="MenuNameFavorites">Favorites</h1>
+    <h1 id="MenuNameWatchList">Watch List</h1>
   </div>
   <div id="displayOption">
     <p>Display Options</p>
     <table>
       <tr>
        <td> 
-         <input type="radio" id="list_option_two" name="view1" value="l" checked="checked">
+         <input type="radio" id="list_option_two" name="FavoritesDisplayOption" value="l" checked="checked">
          <br>
         <label for="list_option_two">List</label>
       </td>
       <td>
-        <input type="radio" id="grid_option_two" name="view1" value="g">
+        <input type="radio" id="grid_option_two" name="FavoritesDisplayOption" value="g">
         <br>
         <label for="grid_option_two">Grid</label>
       </td>
       </tr>
     </table>
   </div>
-    <div id="FavoriteResults"></div>
-    <div id="searchNavContain">
+    <div id="FavoritesResults"></div>
+    <div id="WatchListResults"></div>
+    <div id="FavoritesNav">
+    <div id="searchNavContain" >
       <br>
-      <button id ="FavoritesNavButton" data-search="0">1</button>
-      <button id ="FavoritesNavButton1" data-search="10">2</button>
+      <button id ="FavoritesNavButton1" data-search="0">1</button>
+      <button id ="FavoritesNavButton2" data-search="10">2</button>
     </div>
-</div>
-<div id="WatchListTab">
-  <div class="glass">
-    <h1>Watch List</h1>
   </div>
-  <div id="displayOption">
-    <p>Display Options</p>
-    <table>
-      <tr>
-       <td> 
-         <input type="radio" id="list_option_one" name="view" value="l" checked="checked">
-         <br>
-        <label for="list_option_one">List</label>
-      </td>
-      <td>
-        <input type="radio" id="grid_option_one" name="view" value="g">
-        <br>
-        <label for="grid_option_one">Grid</label>
-      </td>
-      </tr>
-    </table>
-<div id="WatchListResults"></div>
+    <div id="WatchListNav">
+    <div id="searchNavContain" >
+      <br>
+      <button id ="WatchListNavButton1" data-search="0">1</button>
+      <button id ="WatchListNavButton2" data-search="10">2</button>
+    </div>
+  </div>
 
 </div>
 </div>
