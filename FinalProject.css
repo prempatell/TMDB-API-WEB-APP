@@ -131,12 +131,16 @@
   }
   #WatchListResults{
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     flex-wrap:wrap;
+  }
+  #HomeResults{
+    display:flex;
+    flex-direction:column;
+    flex-wrap:nowrap;
   }
  
   #SearchMovie{
-     
     max-width:35%;
     max-height: 22em;
     margin-left:auto;
@@ -218,7 +222,33 @@
    max-height:200vw;
    max-width:80vw;
   }
-
+  #HomeMovie{
+    max-width:35%;
+    max-height: 22em;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:3vh;
+    margin-bottom:1vh;
+    overflow:hidden;
+    padding-right: 3vw;
+    padding-left: 3vw;
+    padding-top:2vh;
+    padding-bottom:1vh;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+    background-color: rgba(255, 255, 255, .30);  
+    backdrop-filter: blur(10px);
+    border:none;
+    outline:none;
+    transition:all .2s ease-in-out;
+  }
+  #HomeMovieCover{
+    min-height:25em;
+   }
+ 
+   #HomeMovie:focus{
+    max-height:200vw;
+    max-width:80vw;
+   }
   nav{
     top:0;
     position:fixed;
