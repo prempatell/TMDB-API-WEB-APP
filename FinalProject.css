@@ -124,8 +124,18 @@
     flex-direction:column;
     flex-wrap:wrap;
   }
+  #FavoritesResults{
+    display:flex;
+    flex-direction:column;
+    flex-wrap:wrap;
+  }
+  #WatchListResults{
+    display:flex;
+    flex-direction:column;
+    flex-wrap:wrap;
+  }
  
-  #book{
+  #SearchMovie{
      
     max-width:35%;
     max-height: 22em;
@@ -145,14 +155,14 @@
     outline:none;
     transition:all .2s ease-in-out;
   }
-  #bookcover{
+  #SearchMovieCover{
     min-height:25em;
   }
   #book:focus{
     max-height:200vw;
     max-width:80vw;
   }
-  #FavoriteMovie{
+  #FavoritesMovie{
     max-width:35%;
     max-height: 22em;
     margin-left:auto;
@@ -172,11 +182,11 @@
     transition:all .2s ease-in-out;
   }
 
-  #FavoriteMovieCover{
+  #FavoritesMovieCover{
    min-height:25em;
   }
 
-  #FavoriteMovie:focus{
+  #FavoritesMovie:focus{
    max-height:200vw;
    max-width:80vw;
   }
@@ -238,13 +248,18 @@
   #Menu{
     display:none;
   }
-  #FavoritesTab{
-    display:none;
-  }
-  #WatchListTab{
+  
+  #WatchListResults{
     display:none;
   }
   #searchNav{
+    display:none;
+  }
+  
+  #MenuNameWatchList{
+    display:none;
+  }
+  .WatchListClear{
     display:none;
   }
   #searchNavContain{
@@ -253,6 +268,20 @@
     margin-right:auto;
     width:40%;
     justify-content: center;
+  }
+  #WatchListNav{
+    display:None;
+  }
+  #FavoritesNav{
+   display:block;
+  }
+  .FavoritesToggle:hover{
+    cursor: pointer;
+    color:gray;
+  }
+  .WatchListToggle:hover{
+    cursor:pointer;
+    color:gray;
   }
 
   .searchbox{
@@ -313,3 +342,4 @@
     cursor:pointer;
     color:gray;
   }
+  
