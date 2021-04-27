@@ -124,12 +124,7 @@
     flex-direction:column;
     flex-wrap:wrap;
   }
-  #baileyResults{
-    display:flex;
-    flex-direction:column;
-    flex-wrap:wrap; 
-  }
-
+ 
   #book{
      
     max-width:35%;
@@ -150,7 +145,14 @@
     outline:none;
     transition:all .2s ease-in-out;
   }
-  #bailey_bk{
+  #bookcover{
+    min-height:25em;
+  }
+  #book:focus{
+    max-height:200vw;
+    max-width:80vw;
+  }
+  #FavoriteMovie{
     max-width:35%;
     max-height: 22em;
     margin-left:auto;
@@ -169,21 +171,43 @@
     outline:none;
     transition:all .2s ease-in-out;
   }
-#bookcover{
-  min-height:25em;
-}
-#bkcover{
-  min-height:25em;
-}
-#book:focus{
-  max-height:200vw;
-  max-width:80vw;
-}
-#bailey_bk:focus{
-  max-height:200vw;
-  max-width:80vw;
+
+  #FavoriteMovieCover{
+   min-height:25em;
   }
-  
+
+  #FavoriteMovie:focus{
+   max-height:200vw;
+   max-width:80vw;
+  }
+  #WatchListMovie{
+    max-width:35%;
+    max-height: 22em;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:3vh;
+    margin-bottom:1vh;
+    overflow:hidden;
+    padding-right: 3vw;
+    padding-left: 3vw;
+    padding-top:2vh;
+    padding-bottom:1vh;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+    background-color: rgba(255, 255, 255, .30);  
+    backdrop-filter: blur(10px);
+    border:none;
+    outline:none;
+    transition:all .2s ease-in-out;
+  }
+
+  #WatchListMovieCover{
+   min-height:25em;
+  }
+
+  #WatchListMovie:focus{
+   max-height:200vw;
+   max-width:80vw;
+  }
 
   nav{
     top:0;
@@ -208,13 +232,16 @@
     color:gray;
     cursor:pointer;
   } 
-  #search{
+  #Home{
     display:none;
   }
-  #myShelf{
+  #Menu{
     display:none;
   }
-  #BookShelf{
+  #FavoritesTab{
+    display:none;
+  }
+  #WatchListTab{
     display:none;
   }
   #searchNav{
@@ -265,4 +292,24 @@
   }
   #displayOption td{
     width:5em;
+  }
+  #MenuToggle{
+    z-index:0;
+    max-width: 35vw;
+    position:static;
+    padding:.75em;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top:8vw;
+    margin-left:auto;
+    margin-right:auto;
+    border-radius: 10px;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+    background-color: rgba(255, 255, 255, .30);  
+    backdrop-filter: blur(10px);  
+  }
+  #MenuToggle p:hover{
+    cursor:pointer;
+    color:gray;
   }
