@@ -76,9 +76,9 @@ var searchtext;
 
 
 $(document).ready(function(){
-  $baileyShelf();
+  $FavoritesSearch();
   $searchButtonColor();
-  $baileyNavButtonColor();
+  $FavoritesNavButtonColor();
 
 $('input:radio[name="view"]').change(
   function(){
@@ -94,28 +94,36 @@ $('input:radio[name="view"]').change(
 $('input:radio[name="view1"]').change(
   function(){
     if ($('#list_option_two').is(':checked') && $('#list_option_two').val() == 'l') {
-      $('#baileyResults').css('flex-direction','column');
+      $('#FavoritesOption').css('flex-direction','column');
       console.log("bailey's shelf column");
     }
     else{
-      $('#baileyResults').css('flex-direction','row');
+      $('#FavoritesOption').css('flex-direction','row');
       console.log("bailey's shelf row");
     }
   });
 
-$('#homepage').click(function(){
+$("#HomeOption").click(function(){
     $clearpage();
-    $('#welcome').show();
+    $('#Home').show();
    
 });
-$("#searchpage").click(function(){
+$("#MenuOption").click(function(){
     $clearpage();
-    $('#search').show();
+    $('WatchListTab').show();
+    $('#Menu').show();
 });
 
-$("#baileyShelf").click(function(){
-    $clearpage();
-    $('#myShelf').show();
+$('#FavoritesOption').click(function(){
+    $clearMenu();
+    $('#FavoritesTab').show();
+    console.log("show favorites")
+});
+
+$('WatchListOption').click(function(){
+    $clearMenu();
+    $('#WatchListTab').show();
+    console.log("Show watch List")
 });
 
 $("#SearchButton").click(function(){
@@ -187,12 +195,25 @@ $('#baileyNavButton2', ).click(function(){
 });
 
 });
-
+$clearMenu = function(){
+  $('#welcome').hide();
+  $('#Home').hide();
+  $('#FavoritesTab').hide();
+  $('#WatchListTab').hide();
+  $('#FavoritesResults').hide();
+  $('#WatchListResults').hide();
+  $('#search').hide();
+};
 $clearpage = function(){
     $('#welcome').hide();
-    $('#myShelf').hide();
+    $('#Home').hide();
+    $('#Menu').hide();
+    $('#FavoritesTab').hide();
+    $('#WatchListTab').hide();
+    $('#FavoritesResults').hide();
+    $('#WatchListResults').hide();
     $('#search').hide();
-    $('#BookShelf').hide();
+
 };
 
 $clearbooksearch = function(){
@@ -228,7 +249,7 @@ $searchbook = function(){
 }
 
 
-$baileyShelf=function(){
+$FavoritesSearch=function(){
     $.get("https://www.googleapis.com/books/v1/users/100449795462524380304/bookshelves/1001/volumes?startIndex="+startIndex1, function(searchResponse){
    console.log(searchResponse);
    console.log("search from:" + startIndex1);
@@ -272,15 +293,15 @@ $searchButtonWhite = function(){
   $("#searchNavButton4").css("background-color","rgba(255, 255, 255, .7)");
   $("#searchNavButton5").css("background-color","rgba(255, 255, 255, .7)");
 };
-$baileyNavButtonColor = function(){
+$FavoritesNavButtonColor = function(){
   switch(baileyNavButton){
     case 1:
-      $("#baileyNavButton2").css("background-color","rgba(255, 255, 255, .7)");
-      $("#baileyNavButton1").css("background-color","rgba(211, 206, 206, 0.582)");
+      $("#FavoritesNavButton2").css("background-color","rgba(255, 255, 255, .7)");
+      $("#FavoritesNavButton1").css("background-color","rgba(211, 206, 206, 0.582)");
     break;
     case 2:
-      $("#baileyNavButton1").css("background-color","rgba(255, 255, 255, .7)");
-      $("#baileyNavButton2").css("background-color","rgba(211, 206, 206, 0.582)");
+      $("#FavoritesNavButton1").css("background-color","rgba(255, 255, 255, .7)");
+      $("#FavoritesNavButton2").css("background-color","rgba(211, 206, 206, 0.582)");
     break;
   }
 }
@@ -288,11 +309,12 @@ $baileyNavButtonColor = function(){
 </script>
 </head>
 <nav>
-  <p id="searchpage">Home</p>
+  <p id="HomeOption">Home</p>
   <a href="https://baileyknez.azurewebsites.net/resume.html">
   </p><img src="logo.png" alt="home" height="45" width="53">
   </a>
-  <p id="baileyShelf">Menu</p> 
+  <p id="MenuOption">Menu</p> 
+
 </nav>
 
 
@@ -306,10 +328,9 @@ $baileyNavButtonColor = function(){
     
   
 </div>
-<div id="search">
+<div id="Home">
   <div class="glass">
-    <h1>Google Book Search</h1>
-    <p>Search for any Book</p>
+  <h1>Home</h1>
 
     <div class="searchbox">
         
@@ -336,6 +357,7 @@ $baileyNavButtonColor = function(){
       </tr>
     </table>
   </div>
+    <div id="HomeResults"></div>
     <div id="searchResults"></div>
 
     <div id="searchNav">
@@ -351,11 +373,16 @@ $baileyNavButtonColor = function(){
     </div>
     <br>
   </div>
-
+<div id="Menu">
+  <div id="MenuToggle">
+    <p id="FavoritesOption">Favorites</p>
+    <p>|</p>
+    <p id="WatchListOption">Watch List</p>
+  </div>
 </div>
-<div id="myShelf">
+<div id="FavoritesTab">
   <div class="glass">
-    <h1>Bailey's Shelf</h1>
+    <h1>Favorites</h1>
   </div>
   <div id="displayOption">
     <p>Display Options</p>
@@ -374,15 +401,36 @@ $baileyNavButtonColor = function(){
       </tr>
     </table>
   </div>
-    <div id="baileyResults"></div>
+    <div id="FavoriteResults"></div>
     <div id="searchNavContain">
       <br>
-      <button id ="baileyNavButton1" data-search="0">1</button>
-      <button id ="baileyNavButton2" data-search="10">2</button>
+      <button id ="FavoritesNavButton" data-search="0">1</button>
+      <button id ="FavoritesNavButton1" data-search="10">2</button>
     </div>
 </div>
-<div id="UserShelf">
+<div id="WatchListTab">
+  <div class="glass">
+    <h1>Watch List</h1>
+  </div>
+  <div id="displayOption">
+    <p>Display Options</p>
+    <table>
+      <tr>
+       <td> 
+         <input type="radio" id="list_option_one" name="view" value="l" checked="checked">
+         <br>
+        <label for="list_option_one">List</label>
+      </td>
+      <td>
+        <input type="radio" id="grid_option_one" name="view" value="g">
+        <br>
+        <label for="grid_option_one">Grid</label>
+      </td>
+      </tr>
+    </table>
+<div id="WatchListResults"></div>
 
+</div>
 </div>
 </div>
 </html>
