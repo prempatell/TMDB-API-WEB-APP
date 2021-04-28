@@ -121,7 +121,7 @@
   }
   #searchResults{
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     flex-wrap:wrap;
   }
   #FavoritesResults{
@@ -136,13 +136,13 @@
   }
   #HomeResults{
     display:flex;
-    flex-direction:column;
-    flex-wrap:nowrap;
+    flex-direction:row;
+    flex-wrap:wrap;
   }
  
   #SearchMovie{
-    max-width:35%;
-    max-height: 22em;
+    max-width:20em;
+    max-height: 30em;
     margin-left:auto;
     margin-right:auto;
     margin-top:3vh;
@@ -160,15 +160,15 @@
     transition:all .2s ease-in-out;
   }
   #SearchMovieCover{
-    min-height:25em;
+    min-height:30em;
   }
-  #book:focus{
+  #SearchMovie:focus{
     max-height:200vw;
     max-width:80vw;
   }
   #FavoritesMovie{
-    max-width:35%;
-    max-height: 22em;
+    max-width:20em;
+    max-height: 30em;
     margin-left:auto;
     margin-right:auto;
     margin-top:3vh;
@@ -187,7 +187,7 @@
   }
 
   #FavoritesMovieCover{
-   min-height:25em;
+   min-height:30em;
   }
 
   #FavoritesMovie:focus{
@@ -195,8 +195,8 @@
    max-width:80vw;
   }
   #WatchListMovie{
-    max-width:35%;
-    max-height: 22em;
+    max-width:20em;
+    max-height: 30em;
     margin-left:auto;
     margin-right:auto;
     margin-top:3vh;
@@ -215,7 +215,7 @@
   }
 
   #WatchListMovieCover{
-   min-height:25em;
+   min-height:30em;
   }
 
   #WatchListMovie:focus{
@@ -223,8 +223,8 @@
    max-width:80vw;
   }
   #HomeMovie{
-    max-width:35%;
-    max-height: 22em;
+    max-width:20em;
+    max-height: 30em;
     margin-left:auto;
     margin-right:auto;
     margin-top:3vh;
@@ -242,7 +242,7 @@
     transition:all .2s ease-in-out;
   }
   #HomeMovieCover{
-    min-height:25em;
+    min-height:30em;
    }
  
    #HomeMovie:focus{
@@ -278,6 +278,9 @@
   #Menu{
     display:none;
   }
+  #SearchTab{
+    display:none;
+  }
   
   #WatchListResults{
     display:none;
@@ -291,6 +294,19 @@
   }
   .WatchListClear{
     display:none;
+  }
+  #dialog{
+    display:none;
+    z-index:1000;
+    max-width: 45vw;
+    position:relative;
+    padding:2em;
+    margin-left:auto;
+    margin-right:auto;
+    border-radius: 10px;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+    background-color: rgba(255, 255, 255, .30);  
+    backdrop-filter: blur(10px);
   }
   #searchNavContain{
     display:flex;
