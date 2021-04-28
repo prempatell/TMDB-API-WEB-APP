@@ -389,7 +389,7 @@ $FavoritesSearch=function(){
 };
 
 $WatchListSearch=function(){
-    $.get("https://api.themoviedb.org/3/account/10437136/watchlist/movies?api_key=4b1b68988784917b4b649f5723b60b02&language=en-US&session_id="+session_id+"&sort_by=created_at.asc&page=1", function(searchResponse){
+    $.get("https://api.themoviedb.org/3/account/10437136/watchlist/movies?api_key=4b1b68988784917b4b649f5723b60b02&language=en-US&session_id="+session_id+"&sort_by=created_at.asc&page="+Wat, function(searchResponse){
    console.log(searchResponse);
    console.log("search from:" + WatchListIndex);
    totalResults=searchResponse.totalItems;
