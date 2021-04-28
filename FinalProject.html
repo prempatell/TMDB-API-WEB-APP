@@ -228,20 +228,22 @@ $('#FavoritesNavButton2', ).click(function(){
   $FavoritesSearch();
   $FavoritesNavButtonColor(); 
 });
-if(HomeToggle <= 1){
-console.log("Home toggle ="+HomeToggle);
+
+
 $(window).on("scroll", function() {
  //page height
  var scrollHeight = $(document).height();
  //scroll position
  var scrollPos = $(window).height() + $(window).scrollTop();
  // fire if the scroll position is 300 pixels above the bottom of the page
+ if(HomeToggle <= 1){
  if(((scrollHeight - 300) >= scrollPos) / scrollHeight == 0){
    HomeIndex++;
    $PopularContent();
   }
+  }
 });
-}
+
 });
 
 /*Functions*/
