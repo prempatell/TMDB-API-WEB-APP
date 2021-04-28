@@ -15,11 +15,9 @@ crossorigin="anonymous"></script>
   {{#results}}
   <div id="HomeMovie" tabindex='0'>
   <div id="HomeMovieCover">
-  <h2>{{title}} {{name}}</h2>
-  <br>
-  <p><img src="https://image.tmdb.org/t/p/w200/{{poster_path}}" alt="{{title}}"></p>
+  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}"></p>
   </div>
-
+  <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
   <p>{{genre}}</p>
 </div>
@@ -29,11 +27,9 @@ crossorigin="anonymous"></script>
   {{#results}}
   <div id="SearchMovie" tabindex='0'>
   <div id="SearchMovieCover">
-  <h2>{{title}}</h2>
-  <br>
-  <p><img src="https://image.tmdb.org/t/p/w200/{{poster_path}}" alt="{{title}}"></p>
+  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}"></p>
   </div>
-
+  <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
   <p>{{genre}}</p>
 </div>
@@ -43,11 +39,10 @@ crossorigin="anonymous"></script>
   {{#results}}
   <div id="FavoritesMovie" tabindex='0'>
   <div id="FavoritesMovieCover">
-  <h2>{{title}}</h2>
   <br>
-  <p><img src="https://image.tmdb.org/t/p/w200/{{poster_path}}" alt="{{title}}"></p>
+  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}"></p>
   </div>
-
+  <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
   <p>{{genre}}</p>
 </div>
@@ -69,23 +64,25 @@ crossorigin="anonymous"></script>
 </script>
 <script type="text/javascript">
 /*variables*/
-var startIndex=0;
-var startIndex1=0;
+var startIndex=1;
+var startIndex1=1;
 var searchButton=1;
+var HomeIndex=1;
 var FavoritesNavButtonBool=1;
 var bool=0;
 var totalResults=0;
 var searchtext;  
 var request_token;
+var HomeToggle=1;
 
 
 /*page actions*/
 $(document).ready(function(){
-  $FavoritesSearch();
+  
   $searchButtonColor();
   $FavoritesNavButtonColor();
   $PopularContent();
-  $Authentication();
+ 
   
 
 $('input:radio[name="SearchDisplayOption"]').change(
@@ -124,13 +121,22 @@ $('input:radio[name="FavoritesDisplayOption"]').change(
 /*toggle actions*/
 $("#HomeOption").click(function(){
     $clearpage();
+    HomeToggle=0;
+    console.log(HomeToggle);
     $('#Home').show();
-   
+    $("#HomeResults").show();
 });
 $("#MenuOption").click(function(){
+    HomeToggle=2;
+    console.log(HomeToggle);
     $clearpage();
-    $('WatchListTab').show();
     $('#Menu').show();
+});
+$("#SearchOption").click(function(){
+    HomeToggle=2;
+    console.log(HomeToggle);
+    $clearpage();
+    $('#SearchTab').show();
 });
 
 $('.FavoritesToggle').click(function(){
@@ -156,18 +162,18 @@ $('.WatchListToggle').click(function(){
 $("#SearchButton").click(function(){
       console.log("search submitted");
       searchtext = $('#textbox').val();
-     
+     console.log(searchtext);
       if(searchtext == ''){
         alert("Please enter something to search");
     }
     else{
       if(bool > 0){
     console.log("clear");
-    $clearbooksearch();
+    $clearSearch();
       }
-    startIndex=0;
+    startIndex=1;
     searchButton=1;
-    $clearHome();
+    $clearSearch();
     $searchMovie();
     $searchButtonColor();
     }
@@ -175,54 +181,67 @@ $("#SearchButton").click(function(){
 /*Nav buttons*/
 $('#searchNavButton1', ).click(function(){
   $clearSearch();
-  startIndex=0; 
+  startIndex=1; 
   searchButton=1;
   $searchMovie();
   $searchButtonColor();
 });
 $('#searchNavButton2', ).click(function(){
   $clearSearch();
-  startIndex=10; 
+  startIndex=2; 
   searchButton=2;
   $searchMovie();
   $searchButtonColor();
 });
 $('#searchNavButton3', ).click(function(){
   $clearSearch();
-  startIndex=20; 
+  startIndex=3; 
   searchButton=3;
   $searchMovie();
   $searchButtonColor();
 });
 $('#searchNavButton4', ).click(function(){
   $clearSearch();
-  startIndex=30; 
+  startIndex=4; 
   searchButton=4;
-  $searchbook();
+  $searchMovie();
   $searchButtonColor();
 });
 $('#searchNavButton5', ).click(function(){
-  $clearbooksearch();
-  startIndex=40; 
+  $clearSearch();
+  startIndex=5; 
   searchButton=5;
-  $searchbook();
+  $searchMovie();
   $searchButtonColor();
 });
 $('#FavoritesNavButton1', ).click(function(){
   $clearFavoritesSearch();
-  startIndex1=0; 
+  startIndex1=1; 
   FavoritesNavButtonBool=1;
   $FavoritesSearch();
   $FavoritesNavButtonColor();
 });
 $('#FavoritesNavButton2', ).click(function(){
   $clearFavoritesSearch();
-  startIndex1=10; 
+  startIndex1=2; 
   FavoritesNavButtonBool=2;
   $FavoritesSearch();
   $FavoritesNavButtonColor(); 
 });
-
+if(HomeToggle <= 1){
+console.log("Home toggle ="+HomeToggle);
+$(window).on("scroll", function() {
+ //page height
+ var scrollHeight = $(document).height();
+ //scroll position
+ var scrollPos = $(window).height() + $(window).scrollTop();
+ // fire if the scroll position is 300 pixels above the bottom of the page
+ if(((scrollHeight - 300) >= scrollPos) / scrollHeight == 0){
+   HomeIndex++;
+   $PopularContent();
+  }
+});
+}
 });
 
 /*Functions*/
@@ -230,7 +249,7 @@ $clearpage = function(){
     $('#welcome').hide();
     $('#Home').hide();
     $('#Menu').hide();
-    $('#search').hide();
+    $('#SearchTab').hide();
 
 }
 
@@ -264,13 +283,18 @@ $clearWatchListSearch = function(){
 /*https://api.themoviedb.org/*/
 $Authentication=function(){
   $.get("https://api.themoviedb.org/3/authentication/token/new?api_key=4b1b68988784917b4b649f5723b60b02", function(searchResponse){
-   console.log("Authenticated");
+   console.log(searchResponse);
    request_token = searchResponse.request_token;
+   console.log(request_token);
   });
-}
+  var rt = { "request_token": " request_token "};
+ $.post("https://www.themoviedb.org/authenticate/"+request_token, function(searchResponse){
+   console.log(searchResponse);
+});
+ }
 
 $searchMovie = function(){
-  $.get( "https://api.themoviedb.org/3/search/movie?api_key=4b1b68988784917b4b649f5723b60b02&query="+searchtext, function(searchResponse){
+  $.get( "https://api.themoviedb.org/3/search/movie?api_key=4b1b68988784917b4b649f5723b60b02&query="+searchtext+"&page="+startIndex, function(searchResponse){
     console.log(searchResponse);
     console.log("search from:" + startIndex);
     var searchdata, cover;
@@ -282,21 +306,21 @@ $searchMovie = function(){
     var text = Mustache.render(template, searchResponse);
     $("#searchResults").html(text);
     console.log("book made");
-    
     $("#searchNav").show();
 
   });
 }
+
 $PopularContent=function(){
-  $.get("https://api.themoviedb.org/3/trending/all/day?api_key=4b1b68988784917b4b649f5723b60b02", function(searchResponse){
+  $.get("https://api.themoviedb.org/3/trending/all/day?api_key=4b1b68988784917b4b649f5723b60b02&page="+ HomeIndex, function(searchResponse){
    console.log(searchResponse);
    console.log("search from:" + startIndex1);
-   totalResults=searchResponse.totalItems;
+   totalResults=searchResponse.total_pages;
    console.log("total results:"+totalResults);
 
    var template = $('#PopularContentTemp').html();
    var text = Mustache.render(template, searchResponse);
-   $("#HomeResults").html(text);
+   $("#HomeResults").append(text);
    console.log("home made");
   });
 }
@@ -388,15 +412,11 @@ $FavoritesNavButtonColor = function(){
 </script>
 </head>
 <nav>
+  <p id="SearchOption">Search</p>
   <p id="HomeOption">Home</p>
-  <a href="https://baileyknez.azurewebsites.net/resume.html">
-  </p><img src="logo.png" alt="home" height="45" width="53">
-  </a>
   <p id="MenuOption">Menu</p> 
 
 </nav>
-
-
 
 <div id="welcome">
   <div class="glass">
@@ -404,20 +424,24 @@ $FavoritesNavButtonColor = function(){
     <br>
     <p>Welcome to Bailey's book search and shelf. This page was made using google's Book API, AJAX, JQUERY, and Musache.js</p>
   </div>
-    
-  
 </div>
+
 <div id="Home">
   <div class="glass">
-    <div class="searchbox">
       <h1>Home</h1>
+      <h2>Our Popular Movies at the moment</h2>
+</div>
+<div id="HomeResults"></div>
+</div>
+
+<div id="SearchTab">
+  <div class="glass">
+    <div class="searchbox">
+      <h1>Search</h1>
         <input id="textbox" type="search" >
         <button id="SearchButton">  Search Books  </button>
-      <p>Our Popular Movies at the moment</p>
     </div>
-    
   </div>
-
   <div id="displayOption">
     <p>Display Options</p>
     <table>
@@ -435,9 +459,7 @@ $FavoritesNavButtonColor = function(){
       </tr>
     </table>
   </div>
-    <div id="HomeResults"></div>
     <div id="searchResults"></div>
-
     <div id="searchNav">
       <div id="searchNavContain">
       <br>
