@@ -81,7 +81,7 @@ var request_token;
 var HomeToggle=1;
 var session_id;
 var account_id=10437136;
-var media="movie";
+var media="movies";
 
 /*page actions*/
 $(document).ready(function(){
@@ -164,10 +164,16 @@ $('.WatchListToggle').click(function(){
     console.log("Show watch List")
 });
 $('.MovieToggle').click(function(){
-  media ="movie";
+  media ="movies";
+  $clearFavoritesSearch();
+  $clearWatchListSearch();
+ 
 });
 $('.TvToggle').click(function(){
   media ="tv";
+  $clearFavoritesSearch();
+  $clearWatchListSearch();
+
 });
 $("#SearchButton").click(function(){
       console.log("search submitted");
@@ -335,7 +341,7 @@ $Authentication=function(){
     });
  }
 $searchMovie = function(){
-  $.get( "https://api.themoviedb.org/3/search/movie?api_key=4b1b68988784917b4b649f5723b60b02&query="+searchtext+"&page="+startIndex, function(searchResponse){
+  $.get( "https://api.themoviedb.org/3/search/movies?api_key=4b1b68988784917b4b649f5723b60b02&query="+searchtext+"&page="+startIndex, function(searchResponse){
     console.log(searchResponse);
     console.log("search from:" + startIndex);
     var searchdata, cover;
