@@ -15,11 +15,11 @@ crossorigin="anonymous"></script>
   {{#results}}
   <div id="HomeMovie" tabindex='0'>
   <div id="HomeMovieCover">
-  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}"></p>
+  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
   </div>
   <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
-  <button><button>
+  <button>Add to Favorites</button><button>Add to Watch List</button>
 </div>
 {{/results}}
 </script>
@@ -28,7 +28,7 @@ crossorigin="anonymous"></script>
   {{#results}}
   <div id="SearchMovie" tabindex='0'>
   <div id="SearchMovieCover">
-  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}"></p>
+  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
   </div>
   <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
@@ -42,7 +42,7 @@ crossorigin="anonymous"></script>
   <div id="FavoritesMovie" tabindex='0'>
   <div id="FavoritesMovieCover">
   <br>
-  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}"></p>
+  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
   </div>
   <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
@@ -81,8 +81,9 @@ var request_token;
 var HomeToggle=1;
 var session_id;
 var account_id=10437136;
-var media="movies";
-
+var mediaMenu="movies";
+var mediaSearch="movie";
+var noResults= "<div class='glass'><h2>404 no results found</h2></div>";
 /*page actions*/
 $(document).ready(function(){
   $Authentication();
@@ -105,24 +106,16 @@ $('input:radio[name="FavoritesDisplayOption"]').change(
   function(){
     if ($('#list_option_two').is(':checked') && $('#list_option_two').val() == 'l') {
       $('#FavoritesResults').css('flex-direction','column');
-      console.log("Favorites's shelf column");
+      $('#WatchListResults').css('flex-direction','column');
+      console.log("Menu shelf column");
     }
     else{
       $('#FavoritesResults').css('flex-direction','row');
-      console.log("Favorites's shelf row");
-    }
-  });
-  $('input:radio[name="WatchListDisplayOption"]').change(
-  function(){
-    if ($('#list_option_two').is(':checked') && $('#list_option_two').val() == 'l') {
-      $('#WatchListResults').css('flex-direction','column');
-      console.log("Favorites's shelf column");
-    }
-    else{
       $('#WatchListResults').css('flex-direction','row');
-      console.log("Favorites's shelf row");
+      console.log("menu shelf row");
     }
   });
+ 
 /*toggle actions*/
 $("#HomeOption").click(function(){
     $clearpage();
@@ -149,8 +142,8 @@ $('.FavoritesToggle').click(function(){
     $('#MenuNameFavorites').show();
     $('#WatchListResults').hide();
     $('#FavoritesResults').show();
-    $('WatchListNav').hide();
-    $('FavoritesNav').show();
+    $('#WatchListNav').hide();
+    $('#FavoritesNav').show();
     console.log("show favorites")
 });
 
@@ -159,20 +152,42 @@ $('.WatchListToggle').click(function(){
     $('#MenuNameFavorites').hide();
     $('#WatchListResults').show();
     $('#FavoritesResults').hide();
-    $('WatchListNav').show();
-    $('FavoritesNav').hide();
+    $('#WatchListNav').show();
+    $('#FavoritesNav').hide();
     console.log("Show watch List")
 });
-$('.MovieToggle').click(function(){
-  media ="movies";
+$('.MenuMovieToggle').click(function(){
+  WatchListIndex=1;
+  FavoritesIndex=1;
+  mediaMenu ="movies";
   $clearFavoritesSearch();
   $clearWatchListSearch();
+  $WatchListSearch();
+  $FavoritesSearch();
  
 });
-$('.TvToggle').click(function(){
-  media ="tv";
+$('.MenuTvToggle').click(function(){
+  WatchListIndex=1;
+  FavoritesIndex=1;
+  mediaMenu ="tv";
   $clearFavoritesSearch();
   $clearWatchListSearch();
+  $WatchListSearch();
+  $FavoritesSearch();
+
+});
+$('.SearchMovieToggle').click(function(){
+  startIndex=1;
+  mediaSearch ="movie";
+  $clearFavoritesSearch();
+  $searchMovie();
+ 
+});
+$('.SearchTvToggle').click(function(){
+  startIndex=1;
+  mediaSearch ="tv";
+  $clearSearch();
+  $searchMovie();
 
 });
 $("#SearchButton").click(function(){
@@ -315,24 +330,34 @@ $Authentication=function(){
   console.log("Request Token: " + request_token);
   console.log("session_ID:"+session_id);
   if(request_token == undefined){
+    $GetToken();
+  } else if(session_id == undefined){
+   $GetSession();
+ }
+}
+$GetToken=function(){
   $.get("https://api.themoviedb.org/3/authentication/token/new?api_key=4b1b68988784917b4b649f5723b60b02", function(searchResponse){
    console.log(searchResponse);
    request_token = searchResponse.request_token;
-   $("#dialog").html('<p><a href="https://www.themoviedb.org/authenticate/'+request_token+'?redirect_to=https://baileyknez.azurewebsites.net/FinalProject.html">Click to enable list</a></p>');
-   $("#dialog").show();
+   var account='<div class="glass"><p><a href="https://www.themoviedb.org/authenticate/'+request_token+'?redirect_to=https://baileyknez.azurewebsites.net/FinalProject.html">Click to enable list</a></p></div>';
+   $("#FavoritesResults").append(account);
+   $("#WatchListResults").append(account);
   });
-  } else if(session_id == undefined){
-    console.log("Request Token accepted");
-    $.post("https://api.themoviedb.org/3/authentication/session/new?api_key=4b1b68988784917b4b649f5723b60b02", {'request_token':request_token}, function(searchResponse){
+}
+$GetSession=function(){
+  $.post("https://api.themoviedb.org/3/authentication/session/new?api_key=4b1b68988784917b4b649f5723b60b02", {'request_token':request_token}, function(searchResponse){
      console.log(searchResponse);
      session_id =searchResponse.session_id;
      AccountDetail();
      $FavoritesSearch();
      $WatchListSearch();
-    });
+     $('#FavoritesNav').show();
+  });
+  if(session_id == undefined){
+    $GetToken();
   }
+}
   
- }
  AccountDetail = function(){
   $.get("https://api.themoviedb.org/3/account?api_key=4b1b68988784917b4b649f5723b60b02&session_id="+session_id, function(searchResponse){
      console.log(searchResponse);
@@ -341,14 +366,13 @@ $Authentication=function(){
     });
  }
 $searchMovie = function(){
-  $.get( "https://api.themoviedb.org/3/search/movies?api_key=4b1b68988784917b4b649f5723b60b02&query="+searchtext+"&page="+startIndex, function(searchResponse){
+  console.log(mediaSearch);
+  $.get( "https://api.themoviedb.org/3/search/"+mediaSearch+"?api_key=4b1b68988784917b4b649f5723b60b02&query="+searchtext+"&page="+startIndex, function(searchResponse){
     console.log(searchResponse);
     console.log("search from:" + startIndex);
     var searchdata, cover;
     
-    
-    bool++; 
-   
+    bool++;
     var template = $('#SearchTemp').html();
     var text = Mustache.render(template, searchResponse);
     $("#searchResults").html(text);
@@ -373,33 +397,42 @@ $PopularContent=function(){
 }
 
 $FavoritesSearch=function(){
-  $.get("https://api.themoviedb.org/3/account/10437136/favorite/movies?api_key=4b1b68988784917b4b649f5723b60b02&session_id="+session_id+"&language=en-US&sort_by=created_at.asc&page=1", function(searchResponse){
+  $.get("https://api.themoviedb.org/3/account/10437136/favorite/"+mediaMenu+"?api_key=4b1b68988784917b4b649f5723b60b02&session_id="+session_id+"&language=en-US&sort_by=created_at.asc&page="+FavoritesIndex, function(searchResponse){
   console.log(searchResponse);
-
-  console.log("favorites made");
-   console.log(searchResponse);
    console.log("search from:" + FavoritesIndex);
-   totalResults=searchResponse.totalItems;
+   totalResults=searchResponse.total_results;
    console.log("total results:"+totalResults)
+    
+
    var template = $('#FavoritesTemp').html();
    var text = Mustache.render(template, searchResponse);
    $("#FavoritesResults").html(text);
    console.log("favorites made");
+   if(totalResults==0){
+    $("#FavoritesResults").append(noResults);
+    console.log("no results");
+   
+   }
   });
 };
 
 $WatchListSearch=function(){
-    $.get("https://api.themoviedb.org/3/account/10437136/watchlist/movies?api_key=4b1b68988784917b4b649f5723b60b02&language=en-US&session_id="+session_id+"&sort_by=created_at.asc&page="+Wat, function(searchResponse){
+    $.get("https://api.themoviedb.org/3/account/10437136/watchlist/"+mediaMenu+"?api_key=4b1b68988784917b4b649f5723b60b02&language=en-US&session_id="+session_id+"&sort_by=created_at.asc&page="+WatchListIndex, function(searchResponse){
    console.log(searchResponse);
    console.log("search from:" + WatchListIndex);
-   totalResults=searchResponse.totalItems;
+   totalResults=searchResponse.total_results;
    console.log("total results:"+totalResults)
-   console.log("WatchList made");
+   
   
-   var template = $('#FavoritesTemp').html();
+   var template = $('#WatchListTemp').html();
    var text = Mustache.render(template, searchResponse);
-   $("#FavoritesResults").html(text);
-   console.log("book made");
+   $("#WatchListResults").html(text);
+   console.log("WatchList made");
+
+   if(totalResults==0){
+    $("#WatchListResults").append(noResults);
+    console.log("no results");
+   }
   });
 };
 $searchButtonColor = function(){
@@ -453,9 +486,7 @@ $FavoritesNavButtonColor = function(){
   <p id="MenuOption">Menu</p> 
 
 </nav>
-<div id="dialog">
 
-</div>
 <div id="welcome">
   <div class="glass">
     <h1>Welcome!</h1>
@@ -480,6 +511,7 @@ $FavoritesNavButtonColor = function(){
   <div class="glass">
     <div class="searchbox">
       <h1>Search</h1>
+      <p><span class="SearchMovieToggle">Movie</span> | <span class="SearchTvToggle">TV</span></p>
         <input id="textbox" type="search" >
         <button id="SearchButton">  Search Books  </button>
     </div>
@@ -489,12 +521,12 @@ $FavoritesNavButtonColor = function(){
     <table>
       <tr>
        <td> 
-         <input type="radio" id="list_option_one" name="SearchDisplayOption" value="l" checked="checked">
+         <input type="radio" id="list_option_one" name="SearchDisplayOption" value="l">
          <br>
         <label for="list_option_one">List</label>
       </td>
       <td>
-        <input type="radio" id="grid_option_one" name="SearchDisplayOption" value="g">
+        <input type="radio" id="grid_option_one" name="SearchDisplayOption" value="g" checked="checked">
         <br>
         <label for="grid_option_one">Grid</label>
       </td>
@@ -520,19 +552,19 @@ $FavoritesNavButtonColor = function(){
     <p><span class="FavoritesToggle">Favorites</span> | <span class="WatchListToggle">Watch List</span></p>
     <h1 id="MenuNameFavorites">Favorites</h1>
     <h1 id="MenuNameWatchList">Watch List</h1>
-    <p><span class="MovieToggle">Movie</span> | <span class="TvToggle">TV</span></p>
+    <p><span class="MenuMovieToggle">Movie</span> | <span class="MenuTvToggle">TV</span></p>
   </div>
   <div id="displayOption">
     <p>Display Options</p>
     <table>
       <tr>
        <td> 
-         <input type="radio" id="list_option_two" name="FavoritesDisplayOption" value="l" checked="checked">
+         <input type="radio" id="list_option_two" name="FavoritesDisplayOption" value="l" >
          <br>
         <label for="list_option_two">List</label>
       </td>
       <td>
-        <input type="radio" id="grid_option_two" name="FavoritesDisplayOption" value="g">
+        <input type="radio" id="grid_option_two" name="FavoritesDisplayOption" value="g" checked="checked">
         <br>
         <label for="grid_option_two">Grid</label>
       </td>
