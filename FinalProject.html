@@ -73,7 +73,6 @@ var FavoritesIndex=1;
 var WatchListIndex=1;
 var searchButton=1;
 var HomeIndex=1;
-var FavoritesNavButtonBool=1;
 var bool=0;
 var totalResults=0;
 var searchtext;  
@@ -83,12 +82,13 @@ var session_id;
 var account_id=10437136;
 var mediaMenu="movies";
 var mediaSearch="movie";
+var WatchListTotalResults =1;
+var FavoritesTotalResults =1;
 var noResults= "<div class='glass'><h2>404 no results found</h2></div>";
 /*page actions*/
 $(document).ready(function(){
   $Authentication();
   $searchButtonColor();
-  $FavoritesNavButtonColor();
   $PopularContent();
   console.log(request_token);
 $('input:radio[name="SearchDisplayOption"]').change(
@@ -246,20 +246,41 @@ $('#searchNavButton5', ).click(function(){
   $searchButtonColor();
 });
 $('#FavoritesNavButton1', ).click(function(){
+  if(FavoritesIndex==1){
+    alert("Can't go back");
+  }else{
   $clearFavoritesSearch();
-  FavoritesIndex=1; 
-  FavoritesNavButtonBool=1;
+  FavoritesIndex++; 
   $FavoritesSearch();
-  $FavoritesNavButtonColor();
+  }
 });
 $('#FavoritesNavButton2', ).click(function(){
-  $clearFavoritesSearch();
-  FavoritesIndex=2; 
-  FavoritesNavButtonBool=2;
+  if(FavoritesIndex>=FavoritesTotalResults){
+    alert("End of Results");
+  }else{
+  $clearWatchListSearch();
+  FavoritesIndex++; 
   $FavoritesSearch();
-  $FavoritesNavButtonColor(); 
+  }
 });
-
+$('#WatchListNavButton1', ).click(function(){
+  if(WatchListIndex==1){
+    alert("Can't go back");
+  }else{
+  $clearWatchListSearch();
+  WatchListIndex--; 
+  $WatchListSearch();
+  }
+});
+$('#WatchListNavButton2', ).click(function(){
+  if(WatchListIndex>=WatchListTotalResults){
+    alert("End of Results");
+  }else{
+  $clearFavoritesSearch();
+  WatchListIndex++; 
+  $WatchListSearch();
+  }
+});
 
 $(window).on("scroll", function() {
  //page height
@@ -400,7 +421,7 @@ $FavoritesSearch=function(){
   $.get("https://api.themoviedb.org/3/account/10437136/favorite/"+mediaMenu+"?api_key=4b1b68988784917b4b649f5723b60b02&session_id="+session_id+"&language=en-US&sort_by=created_at.asc&page="+FavoritesIndex, function(searchResponse){
   console.log(searchResponse);
    console.log("search from:" + FavoritesIndex);
-   totalResults=searchResponse.total_results;
+   FavoritesTotalResults=searchResponse.total_pages;
    console.log("total results:"+totalResults)
     
 
@@ -420,8 +441,8 @@ $WatchListSearch=function(){
     $.get("https://api.themoviedb.org/3/account/10437136/watchlist/"+mediaMenu+"?api_key=4b1b68988784917b4b649f5723b60b02&language=en-US&session_id="+session_id+"&sort_by=created_at.asc&page="+WatchListIndex, function(searchResponse){
    console.log(searchResponse);
    console.log("search from:" + WatchListIndex);
-   totalResults=searchResponse.total_results;
-   console.log("total results:"+totalResults)
+   WatchListTotalResults=searchResponse.total_pages;
+   console.log("total results:"+totalResults);
    
   
    var template = $('#WatchListTemp').html();
@@ -463,20 +484,6 @@ $searchButtonWhite = function(){
   $("#searchNavButton4").css("background-color","rgba(255, 255, 255, .7)");
   $("#searchNavButton5").css("background-color","rgba(255, 255, 255, .7)");
 };
-$FavoritesNavButtonColor = function(){
-  switch(FavoritesNavButtonBool){
-    case 1:
-      $("#FavoritesNavButton2").css("background-color","rgba(255, 255, 255, .7)");
-      $("#FavoritesNavButton1").css("background-color","rgba(211, 206, 206, 0.582)");
-      console.log("Favorite button color 1");
-    break;
-    case 2:
-      $("#FavoritesNavButton1").css("background-color","rgba(255, 255, 255, .7)");
-      $("#FavoritesNavButton2").css("background-color","rgba(211, 206, 206, 0.582)");
-      console.log("Favorite button color 2");
-    break;
-  }
-}
 
 </script>
 </head>
@@ -576,15 +583,15 @@ $FavoritesNavButtonColor = function(){
     <div id="FavoritesNav">
     <div id="searchNavContain" >
       <br>
-      <button id ="FavoritesNavButton1" data-search="0">1</button>
-      <button id ="FavoritesNavButton2" data-search="10">2</button>
+      <button id ="FavoritesNavButton1" data-search="0">Back</button>
+      <button id ="FavoritesNavButton2" data-search="10">Next Page</button>
     </div>
   </div>
     <div id="WatchListNav">
     <div id="searchNavContain" >
       <br>
-      <button id ="WatchListNavButton1" data-search="0">1</button>
-      <button id ="WatchListNavButton2" data-search="10">2</button>
+      <button id ="WatchListNavButton1" data-search="0">Back</button>
+      <button id ="WatchListNavButton2" data-search="10">Next Page</button>
     </div>
   </div>
 
@@ -592,3 +599,4 @@ $FavoritesNavButtonColor = function(){
 </div>
 </div>
 </html>
+
