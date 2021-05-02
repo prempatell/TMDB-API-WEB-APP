@@ -26,7 +26,7 @@ crossorigin="anonymous"></script>
 
 <script id="SearchTemp" type="text/template">
   {{#results}}
-  <div id="SearchMovie" tabindex='0'>
+  <div id="{{id}}" tabindex='0'class="SearchMovie">
   <div id="SearchMovieCover">
   <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}"></p>
   </div>
@@ -95,6 +95,7 @@ var session_id;
 var account_id=10437136;
 var media="movies";
 var movie_id;
+var movie=[];
 
 /*page actions*/
 $(document).ready(function(){
@@ -359,38 +360,56 @@ $searchMovie = function(){
     console.log("search from:" + startIndex);
     var searchdata, cover;
 
-    for(i = 0; i < searchResponse.results.length; i++) {
-    movie_id = searchResponse.results[i].id;
-    console.log("movie id: "+movie_id);
-
-    var template = $('#SearchTemp').html();
+var template = $('#SearchTemp').html();
     var text = Mustache.render(template, searchResponse);
     $("#searchResults").html(text);
     console.log("Movie made");
-
-    $.get( "https://api.themoviedb.org/3/movie/"+movie_id+"/credits?api_key=4b1b68988784917b4b649f5723b60b02", function(castResponse){
     
+//add movieid to array
+    for(i = 0; i < searchResponse.results.length; i++) {
+    movie_id = searchResponse.results[i].id;
+    movie.push(""+movie_id)
 
-    console.log(castResponse);
-    
-   
-    var template = $('#CastTemp').html();
-    var text = Mustache.render(template, castResponse);
-    $("#searchResults").append(text);
-    console.log("Cast made");
-    
+    var addByID = searchResponse.results[i].id;
+    console.log("addByID: "+ addByID);
 
-  });
+    
     }
-    
+//add movieid to array
+
+    $addCast();
     bool++; 
    
+    console.log(movie);
+
     
     $("#searchNav").show();
-
-  });
+    
+  })};
 
   
+  $addCast = function(){
+    for(i = 0; i < movie.length; i++) {
+  
+    $.get( "https://api.themoviedb.org/3/movie/"+movie[i]+"/credits?api_key=4b1b68988784917b4b649f5723b60b02", function(castResponse){
+    
+
+    console.log(castResponse.id);
+   
+
+    var template = $('#CastTemp').html();
+    var text = Mustache.render(template, castResponse);
+
+    
+var id = "#"+castResponse.id
+console.log("ID: "+id)
+    $(id).append(text);
+    console.log("Cast made");
+    
+    
+  });
+
+    }
 }
 
 $PopularContent=function(){
@@ -404,7 +423,21 @@ $PopularContent=function(){
    var text = Mustache.render(template, searchResponse);
    $("#HomeResults").append(text);
    console.log("home made");
-  });
+  
+  //add movieid to array
+  for(i = 0; i < searchResponse.results.length; i++) {
+    movie_id = searchResponse.results[i].id;
+    movie.push(""+movie_id)
+
+    var addByID = searchResponse.results[i].id;
+    console.log("addByID: "+ addByID);
+
+    
+    }
+    $addCast();
+
+//add movieid to array
+})
 }
 
 $FavoritesSearch=function(){
@@ -420,6 +453,7 @@ $FavoritesSearch=function(){
    var text = Mustache.render(template, searchResponse);
    $("#FavoritesResults").html(text);
    console.log("favorites made");
+   
   });
 };
 
