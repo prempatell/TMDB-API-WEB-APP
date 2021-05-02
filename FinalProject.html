@@ -13,12 +13,13 @@ crossorigin="anonymous"></script>
 
 <script id="PopularContentTemp" type="text/template">
   {{#results}}
-  <div id="HomeMovie" tabindex='0'>
+  <div id="HomeMovie" class="{{id}}"tabindex='0'>
   <div id="HomeMovieCover">
   <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
   </div>
   <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
+  <div id="{{id}}"></div>
   <button>Add to Favorites</button><button>Add to Watch List</button>
 </div>
 {{/results}}
@@ -26,20 +27,22 @@ crossorigin="anonymous"></script>
 
 <script id="SearchTemp" type="text/template">
   {{#results}}
-  <div id="SearchMovie" tabindex='0'>
+  <div id="SearchMovie" class="{{id}}" tabindex='0'>
   <div id="SearchMovieCover">
   <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
   </div>
   <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
   <p>{{genre}}</p>
+  
+  <button>Add to Favorites</button><button>Add to Watch List</button>
 </div>
 {{/results}}
 </script>
 
 <script id="FavoritesTemp" type="text/template">
   {{#results}}
-  <div id="FavoritesMovie" tabindex='0'>
+  <div id="FavoritesMovie" class="{{id}}" tabindex='0'>
   <div id="FavoritesMovieCover">
   <br>
   <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
@@ -47,25 +50,41 @@ crossorigin="anonymous"></script>
   <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
   <p>{{genre}}</p>
+ 
+  <button>Add to Favorites</button><button>Add to Watch List</button>
 </div>
 {{/results}}
 </script>
 
 <script id="WatchListTemp" type="text/template">
   {{#results}}
-  <div id="WatchListMovie" tabindex='0'>
+  <div id="WatchListMovie" class="{{id}}" tabindex='0'>
   <div id="WatchListMovieCover">
   <h2>{{title}}</h2>
   <br>
   <p><img src="https://image.tmdb.org/t/p/w200/{{poster_path}}" alt="{{title}}"></p>
   </div>
-
   <p>{{overview}}</p>
   <p>{{genre}}</p>
+  <button>Add to Favorites</button><button>Add to Watch List</button>
 </div>
 {{/results}}
 </script>
+
+<script id="CastTemp" type="text/template">
+  {{#cast}}
+  <div id="SearchMovie">
+    <div id="SearchMovieCover">
+      <h2>{{name}}</h2>
+    <p><img src="https://image.tmdb.org/t/p/w300/{{profile_path}}" alt="{{title}}"></p>
+    </div>
+</div>
+{{/cast}}
+</script>
+
+
 <script type="text/javascript">
+
 /*variables*/
 var startIndex=1;
 var popularIndex=1;
@@ -84,6 +103,8 @@ var mediaMenu="movies";
 var mediaSearch="movie";
 var WatchListTotalResults =1;
 var FavoritesTotalResults =1;
+var movie_id;
+var movie=[];
 var noResults= "<div class='glass'><h2>404 no results found</h2></div>";
 /*page actions*/
 $(document).ready(function(){
@@ -398,9 +419,34 @@ $searchMovie = function(){
     var text = Mustache.render(template, searchResponse);
     $("#searchResults").html(text);
     console.log("book made");
-    $("#searchNav").show();
+    
+    for(i = 0; i < searchResponse.results.length; i++) {
+    movie_id = searchResponse.results[i].id;
+    movie.push(""+movie_id)
 
+    var addByID = searchResponse.results[i].id;
+    console.log("addByID: "+ addByID);
+    }
+    $addCast();
   });
+  
+  $("#searchNav").show();
+}
+
+$addCast = function(){
+    for(i = 0; i < movie.length; i++) {
+    $.get( "https://api.themoviedb.org/3/movie/"+movie[i]+"/credits?api_key=4b1b68988784917b4b649f5723b60b02", function(castResponse){
+    console.log(castResponse);
+    console.log(castResponse.id);
+    var template = $('#CastTemp').html();
+    var text = Mustache.render(template, castResponse);
+
+    var id = "."+castResponse.id
+    console.log("ID: "+id)
+    $(id).append(text);
+    console.log("Cast made");
+  });
+  }
 }
 
 $PopularContent=function(){
@@ -413,7 +459,15 @@ $PopularContent=function(){
    var template = $('#PopularContentTemp').html();
    var text = Mustache.render(template, searchResponse);
    $("#HomeResults").append(text);
-   console.log("home made");
+
+   for(i = 0; i < searchResponse.results.length; i++) {
+    movie_id = searchResponse.results[i].id;
+    movie.push(""+movie_id)
+
+    var addByID = searchResponse.results[i].id;
+    console.log("addByID: "+ addByID);
+   }
+   $addCast();
   });
 }
 
@@ -429,11 +483,19 @@ $FavoritesSearch=function(){
    var text = Mustache.render(template, searchResponse);
    $("#FavoritesResults").html(text);
    console.log("favorites made");
-   if(totalResults==0){
+   
+   if(FavoritesTotalResults==0){
     $("#FavoritesResults").append(noResults);
     console.log("no results");
-   
    }
+   for(i = 0; i < searchResponse.results.length; i++) {
+    movie_id = searchResponse.results[i].id;
+    movie.push(""+movie_id)
+
+    var addByID = searchResponse.results[i].id;
+    console.log("addByID: "+ addByID);
+   }
+   $addCast();
   });
 };
 
@@ -450,10 +512,18 @@ $WatchListSearch=function(){
    $("#WatchListResults").html(text);
    console.log("WatchList made");
 
-   if(totalResults==0){
+   if(WatchListTotalResults==0){
     $("#WatchListResults").append(noResults);
     console.log("no results");
    }
+   for(i = 0; i < searchResponse.results.length; i++) {
+    movie_id = searchResponse.results[i].id;
+    movie.push(""+movie_id)
+
+    var addByID = searchResponse.results[i].id;
+    console.log("addByID: "+ addByID);
+   }
+   $addCast();
   });
 };
 $searchButtonColor = function(){
