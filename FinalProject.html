@@ -13,72 +13,71 @@ crossorigin="anonymous"></script>
 
 <script id="PopularContentTemp" type="text/template">
   {{#results}}
-  <div id="HomeMovie" class="{{id}}"tabindex='0'>
-  <div id="HomeMovieCover">
-  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
-  </div>
+  
+  <details id="HomeMovies">
+  <summary>
+  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt={{title}}{{name}}></p>
+  </summary>
   <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
-  <div id="{{id}}"></div>
-  <button>Add to Favorites</button><button>Add to Watch List</button>
+  <div class="ButtonCenter"><button class="AddFavorites" name={{id}} value={{media_type}} >Add to Favorites</button><button class="AddWatchList"  name={{id}} value={{media_type}}>Add to Watch List</button></div>
+  <div class="{{id}}" id="cast"></div>
+</details>
 </div>
 {{/results}}
 </script>
 
 <script id="SearchTemp" type="text/template">
   {{#results}}
-  <div id="SearchMovie" class="{{id}}" tabindex='0'>
-  <div id="SearchMovieCover">
-  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
+    <details id="SearchMovie">
+      <summary>
+        <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
+      </summary>
+      <h2>{{title}} {{name}}</h2>
+      <p>{{overview}}</p>
+      <div class="ButtonCenter"><button class="AddFavorites"  name={{id}} value={{media_type}}>Add to Favorites</button><button class="AddWatchList"  name={{id}} value={{media_type}}>Add to Watch List</button></div>
+      <div class={{id}} id="cast"></div>
+    </details>
   </div>
-  <h2>{{title}} {{name}}</h2>
-  <p>{{overview}}</p>
-  <p>{{genre}}</p>
-  
-  <button>Add to Favorites</button><button>Add to Watch List</button>
-</div>
 {{/results}}
 </script>
 
 <script id="FavoritesTemp" type="text/template">
   {{#results}}
-  <div id="FavoritesMovie" class="{{id}}" tabindex='0'>
-  <div id="FavoritesMovieCover">
-  <br>
+  <details id="FavoritesMovie">
+  <summary>
   <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}{{name}}"></p>
-  </div>
+  </summary>
   <h2>{{title}} {{name}}</h2>
   <p>{{overview}}</p>
-  <p>{{genre}}</p>
- 
-  <button>Add to Favorites</button><button>Add to Watch List</button>
-</div>
+  <div class="ButtonCenter"><button class="RemoveFavorites"  name={{id}} value={{media_type}}>Remove from Favorites</button></div>
+  <div class="{{id}}" id="cast"></div>
+</details>
 {{/results}}
 </script>
 
 <script id="WatchListTemp" type="text/template">
   {{#results}}
-  <div id="WatchListMovie" class="{{id}}" tabindex='0'>
-  <div id="WatchListMovieCover">
+ 
+  <details id="WatchListMovie">
   <h2>{{title}}</h2>
-  <br>
-  <p><img src="https://image.tmdb.org/t/p/w200/{{poster_path}}" alt="{{title}}"></p>
-  </div>
+ 
+  <summary>
+  <p><img src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="{{title}}"></p>
+  </summary>
   <p>{{overview}}</p>
-  <p>{{genre}}</p>
-  <button>Add to Favorites</button><button>Add to Watch List</button>
-</div>
+  <div class="ButtonCenter"><button class="RemoveWatchList"  name={{id}} value={{media_type}}>Remove from Watch List</button></div>
+  <div class="{{id}}" id="cast"></div>
+</details>
 {{/results}}
 </script>
 
 <script id="CastTemp" type="text/template">
   {{#cast}}
-  <div id="SearchMovie">
-    <div id="SearchMovieCover">
+  <div id="castMember" value="{{id}}">
       <h2>{{name}}</h2>
-    <p><img src="https://image.tmdb.org/t/p/w200/{{profile_path}}" alt="{{title}}"></p>
-    </div>
-</div>
+    <p><img src="https://image.tmdb.org/t/p/w200/{{profile_path}}" alt="{{name}}"></p>
+  </div>
 {{/cast}}
 </script>
 
@@ -100,17 +99,19 @@ var HomeToggle=1;
 var session_id;
 var account_id=10437136;
 var mediaMenu="movies";
+var MenuCast="movie";
 var mediaSearch="movie";
 var WatchListTotalResults =1;
 var FavoritesTotalResults =1;
 var movie_id;
 var movie=[];
+var mediaType;
+var media=[];
 var noResults= "<div class='glass'><h2>404 no results found</h2></div>";
 /*page actions*/
 $(document).ready(function(){
   $Authentication();
   $searchButtonColor();
-  $PopularContent();
   console.log(request_token);
 $('input:radio[name="SearchDisplayOption"]').change(
   function(){
@@ -139,6 +140,8 @@ $('input:radio[name="FavoritesDisplayOption"]').change(
  
 /*toggle actions*/
 $("#HomeOption").click(function(){
+    HomeIndex=1;
+    $PopularContent();
     $clearpage();
     HomeToggle=0;
     console.log(HomeToggle);
@@ -146,17 +149,20 @@ $("#HomeOption").click(function(){
     $("#HomeResults").show();
 });
 $("#MenuOption").click(function(){
+    $clearHome();
     HomeToggle=2;
     console.log(HomeToggle);
     $clearpage();
     $('#Menu').show();
 });
 $("#SearchOption").click(function(){
+    $clearHome();
     HomeToggle=2;
     console.log(HomeToggle);
     $clearpage();
     $('#SearchTab').show();
 });
+
 
 $('.FavoritesToggle').click(function(){
     $('#MenuNameWatchList').hide();
@@ -181,6 +187,7 @@ $('.MenuMovieToggle').click(function(){
   WatchListIndex=1;
   FavoritesIndex=1;
   mediaMenu ="movies";
+  MenuCast="movie";
   $clearFavoritesSearch();
   $clearWatchListSearch();
   $WatchListSearch();
@@ -191,6 +198,7 @@ $('.MenuTvToggle').click(function(){
   WatchListIndex=1;
   FavoritesIndex=1;
   mediaMenu ="tv";
+  MenuCast="tv";
   $clearFavoritesSearch();
   $clearWatchListSearch();
   $WatchListSearch();
@@ -302,6 +310,52 @@ $('#WatchListNavButton2', ).click(function(){
   $WatchListSearch();
   }
 });
+//$('.AddFavorites').click(function(){
+//  console.log("clicked "+this);
+//  $.post("https://api.themoviedb.org/3/account/"+account_id+"/favorite?api_key=4b1b68988784917b4b649f5723b60b02&session_id="+session_id, {'media_type':mediaMenu,"media_id":this.value,"true":true}, function(searchResponse){
+//    console.log("WatchList:"+searchResponse);
+ // });
+//});
+$(document).on("click",".AddFavorites", function(event){
+  console.log("clicked "+this.value);
+  if(session_id==undefined){
+    alert("you must log in first");
+  }else{
+  $.post("https://api.themoviedb.org/3/account/"+account_id+"/favorite?api_key=4b1b68988784917b4b649f5723b60b02&session_id="+session_id, {'media_type':this.value,"media_id":this.name,"favorite":true}, function(searchResponse){
+  console.log("favorites:"+searchResponse);
+  });
+ }
+});
+ $(document).on("click",".AddWatchList", function(event){
+  console.log("clicked watchlist");
+  if(session_id==undefined){
+    alert("you must log in first");
+  }else{
+  $.post("https://api.themoviedb.org/3/account/"+account_id+"/watchlist?api_key=4b1b68988784917b4b649f5723b60b02&session_id="+session_id, {'media_type':this.value,"media_id":this.name,"watchlist":true}, function(searchResponse){
+  console.log("watchlist:"+searchResponse);
+  });
+ }
+});
+$(document).on("click",".RemoveFavorites", function(event){
+  console.log("clicked "+this.value);
+  if(session_id==undefined){
+    alert("you must log in first");
+  }else{
+  $.post("https://api.themoviedb.org/3/account/"+account_id+"/favorite?api_key=4b1b68988784917b4b649f5723b60b02&session_id="+session_id, {'media_type':this.value,"media_id":this.name,"favorite":false}, function(searchResponse){
+  console.log("favorites:"+searchResponse);
+  });
+ }
+});
+ $(document).on("click",".RemoveWatchList", function(event){
+  console.log("clicked watchlist");
+  if(session_id==undefined){
+    alert("you must log in first");
+  }else{
+  $.post("https://api.themoviedb.org/3/account/"+account_id+"/watchlist?api_key=4b1b68988784917b4b649f5723b60b02&session_id="+session_id, {'media_type':this.value,"media_id":this.name,"watchlist":false}, function(searchResponse){
+  console.log("watchlist:"+searchResponse);
+  });
+ }
+});
 
 $(window).on("scroll", function() {
  //page height
@@ -351,6 +405,7 @@ $clearHome = function(){
     console.log("home removed");
  });
 }
+
 $clearFavoritesSearch = function(){
     $("div[id*='FavoritesMovie']").each(function (x, pj) {
     $(pj).remove();
@@ -422,10 +477,8 @@ $searchMovie = function(){
     
     for(i = 0; i < searchResponse.results.length; i++) {
     movie_id = searchResponse.results[i].id;
-    movie.push(""+movie_id)
-
-    var addByID = searchResponse.results[i].id;
-    console.log("addByID: "+ addByID);
+    movie.push(""+movie_id);
+    media.push(mediaSearch);
     }
     $addCast();
   });
@@ -434,8 +487,9 @@ $searchMovie = function(){
 }
 
 $addCast = function(){
+  console.log(movie);
     for(i = 0; i < movie.length; i++) {
-    $.get( "https://api.themoviedb.org/3/movie/"+movie[i]+"/credits?api_key=4b1b68988784917b4b649f5723b60b02", function(castResponse){
+    $.get( "https://api.themoviedb.org/3/"+media[i]+"/"+movie[i]+"/credits?api_key=4b1b68988784917b4b649f5723b60b02", function(castResponse){
     console.log(castResponse);
     console.log(castResponse.id);
     var template = $('#CastTemp').html();
@@ -447,7 +501,10 @@ $addCast = function(){
     console.log("Cast made");
   });
   }
+  movie=[];
+  media=[];
 }
+
 
 $PopularContent=function(){
   $.get("https://api.themoviedb.org/3/trending/all/day?api_key=4b1b68988784917b4b649f5723b60b02&page="+ HomeIndex, function(searchResponse){
@@ -463,9 +520,8 @@ $PopularContent=function(){
    for(i = 0; i < searchResponse.results.length; i++) {
     movie_id = searchResponse.results[i].id;
     movie.push(""+movie_id)
-
-    var addByID = searchResponse.results[i].id;
-    console.log("addByID: "+ addByID);
+    mediaType=searchResponse.results[i].media_type;
+    media.push(""+mediaType);
    }
    $addCast();
   });
@@ -490,10 +546,9 @@ $FavoritesSearch=function(){
    }
    for(i = 0; i < searchResponse.results.length; i++) {
     movie_id = searchResponse.results[i].id;
-    movie.push(""+movie_id)
-
-    var addByID = searchResponse.results[i].id;
-    console.log("addByID: "+ addByID);
+    movie.push(""+movie_id);
+    media.push(MenuCast);
+   
    }
    $addCast();
   });
@@ -518,10 +573,9 @@ $WatchListSearch=function(){
    }
    for(i = 0; i < searchResponse.results.length; i++) {
     movie_id = searchResponse.results[i].id;
-    movie.push(""+movie_id)
-
-    var addByID = searchResponse.results[i].id;
-    console.log("addByID: "+ addByID);
+    movie.push(""+movie_id);
+    media.push(MenuCast);
+   
    }
    $addCast();
   });
@@ -590,7 +644,7 @@ $searchButtonWhite = function(){
       <h1>Search</h1>
       <p><span class="SearchMovieToggle">Movie</span> | <span class="SearchTvToggle">TV</span></p>
         <input id="textbox" type="search" >
-        <button id="SearchButton">  Search Books  </button>
+        <button id="SearchButton">  Search </button>
     </div>
   </div>
   <div id="displayOption">
@@ -669,4 +723,3 @@ $searchButtonWhite = function(){
 </div>
 </div>
 </html>
-
