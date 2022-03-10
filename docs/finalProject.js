@@ -351,7 +351,7 @@ $GetToken=function(){
   $.get("https://api.themoviedb.org/3/authentication/token/new?api_key=4b1b68988784917b4b649f5723b60b02", function(searchResponse){
    console.log(searchResponse);
    request_token = searchResponse.request_token;
-   var account='<div class="glass"><p><a href="https://www.themoviedb.org/authenticate/'+request_token+'?redirect_to=https://baileyknez.azurewebsites.net/FinalProject.html">Click to enable list</a></p></div>';
+   var account='<div class="glass"><p><a href="https://www.themoviedb.org/authenticate/'+request_token+'?redirect_to=https://baileyknez.github.io/WebDesign-Final-Project/">Click to enable list</a></p></div>';
    $("#FavoritesResults").append(account);
    $("#WatchListResults").append(account);
   });
