@@ -96,6 +96,33 @@ th{
   font-size: 2em;
   text-align: center;
 }
+details{
+  max-width:20em;
+  max-height: 30em;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:3vh;
+  margin-bottom:1vh;
+  overflow:hidden;
+  padding-right: 3vw;
+  padding-left: 3vw;
+  padding-top:2vh;
+  padding-bottom:1vh;
+  box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+  background-color: rgba(255, 255, 255, .30);  
+  backdrop-filter: blur(10px);
+  border:none;
+  outline:none;
+  transition:all .2s ease-in-out;
+}
+details[open]{
+ max-height:200vw;
+ max-width:80vw;
+}
+summary{
+  display: block;
+  min-height:30em;
+}
 #container{
   min-height: 100%;
   min-width:100%;
@@ -136,115 +163,7 @@ th{
   flex-wrap:wrap;
 }
 
-#SearchMovie{
-  max-width:20em;
-  max-height: 30em;
-  margin-left:auto;
-  margin-right:auto;
-  margin-top:3vh;
-  margin-bottom:1vh;
-  overflow:hidden;
-  padding-right: 3vw;
-  padding-left: 3vw;
-  padding-top:2vh;
-  padding-bottom:1vh;
-  box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
-  background-color: rgba(255, 255, 255, .30);  
-  backdrop-filter: blur(10px);
-  border:none;
-  outline:none;
-  transition:all .2s ease-in-out;
-}
-#SearchMovieCover{
-  min-height:30em;
-}
-#SearchMovie:focus{
-  max-height:200vw;
-  max-width:80vw;
-}
-#FavoritesMovie{
-  max-width:20em;
-  max-height: 30em;
-  margin-left:auto;
-  margin-right:auto;
-  margin-top:3vh;
-  margin-bottom:1vh;
-  overflow:hidden;
-  padding-right: 3vw;
-  padding-left: 3vw;
-  padding-top:2vh;
-  padding-bottom:1vh;
-  box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
-  background-color: rgba(255, 255, 255, .30);  
-  backdrop-filter: blur(10px);
-  border:none;
-  outline:none;
-  transition:all .2s ease-in-out;
-}
 
-#FavoritesMovieCover{
- min-height:30em;
-}
-
-#FavoritesMovie:focus{
- max-height:200vw;
- max-width:80vw;
-}
-#WatchListMovie{
-  max-width:20em;
-  max-height: 30em;
-  margin-left:auto;
-  margin-right:auto;
-  margin-top:3vh;
-  margin-bottom:1vh;
-  overflow:hidden;
-  padding-right: 3vw;
-  padding-left: 3vw;
-  padding-top:2vh;
-  padding-bottom:1vh;
-  box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
-  background-color: rgba(255, 255, 255, .30);  
-  backdrop-filter: blur(10px);
-  border:none;
-  outline:none;
-  transition:all .2s ease-in-out;
-}
-
-#WatchListMovieCover{
- min-height:30em;
-}
-
-#WatchListMovie:focus{
- max-height:200vw;
- max-width:80vw;
-}
-#HomeMovie{
-  max-width:20em;
-  max-height: 30em;
-  margin-left:auto;
-  margin-right:auto;
-  margin-top:3vh;
-  margin-bottom:1vh;
-  overflow:hidden;
-  padding-right: 3vw;
-  padding-left: 3vw;
-  padding-top:2vh;
-  padding-bottom:1vh;
-  box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
-  background-color: rgba(255, 255, 255, .30);  
-  backdrop-filter: blur(10px);
-  border:none;
-  outline:none;
-  transition:all .2s ease-in-out;
-}
-#HomeMovieCover{
-  min-height:30em;
- }
-
- #HomeMovie:focus{
-  max-height:200vw;
-  max-width:80vw;
- }
 nav{
   top:0;
   position:fixed;
@@ -349,7 +268,11 @@ nav p:hover{
   height: 3vh;
   position: relative;
 }
-
+.ButtonCenter{
+ display:flex;
+ align-items: center;
+ justify-content: center;
+}
 .center {
   margin: 0;
   position: absolute;
@@ -399,4 +322,28 @@ nav p:hover{
 #MenuToggle p:hover{
   cursor:pointer;
   color:gray;
+}
+#cast{
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  overflow:scroll;
+  overflow-y:hidden;
+}
+#castMember{
+  max-width:15em;
+  max-height: 30em;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:3vh;
+  margin-bottom:1vh;
+  padding-right: 3vw;
+  padding-left: 3vw;
+  padding-top:2vh;
+  padding-bottom:1vh;
+  box-shadow: 0.5vh 0.5vh 1vh rgba(0,0,0, .25);
+  background-color: rgba(255, 255, 255, .30);  
+  backdrop-filter: blur(10px);
+  border:none;
+  outline:none;
 }
